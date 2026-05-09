@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="style.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    </head>
+
+    <body>
+        <!-- Nav Bar -->
+        <nav>
+            <div class="nav-container">
+                <a class="nav-logo" href="#">John Anderson</a>
+                <div class="nav-links-container">
+                    <ul class="nav-links">
+                        <li class="active"><a href="#about">About</a></l>
+                        <li><a href="#skills">Skills</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <a href="#" class="nav-button">Resume</a>
+            </div>
+        </nav>
+        <main>
+            <!-- HERO section -->
+            <section class="hero-container">
+                <div class="left-section">
+                    <div class="space-y-8">
+                        <div class="highlight">
+                            Available for freelance
+                        </div>
+                        <h1 class="name">
+                            John <span class="text-primary">Anderson</span>
+                        </h1>
+                        <p class="tech-stack">
+                            Full Stack Developer | UI Designer | Problem Solver
+                        </p>
+                        <p class="description">
+                            I craft high-performance digital experiences where technical
+                            precision meets elegant design. Transforming complex problems into
+                            seamless user journeys.
+                        </p>
+                        <div class="button-container">
+                            <button class="hire-button">
+                                Hire Me
+                            </button>
+                            <button class="CV-button">
+                                Download CV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-section">
+                    <div class="img-card">
+                        <img src="images/img.png" alt="">
+                    </div>
+                    <div class="animate-sq"></div>
+                </div>
+            </section>
+            <!-- ABOUT section -->
+            <section class="about-section" id="about">
+                <div class="about-container">
+                    <div class="content">
+                        <div class="summary-container">
+                            <h2 class="title">
+                                Professional Summary
+                            </h2>
+                            <div class="summary">
+                                <p>
+                                    With over 3 years of professional experience, I specialize in
+                                    building scalable web applications that don't just
+                                    function—they excel. My approach blends rigorous engineering
+                                    principles with a deep understanding of visual hierarchy.
+                                </p>
+                                <p>
+                                    I thrive at the intersection of design and development,
+                                    ensuring that every line of code serves a purpose and every
+                                    pixel contributes to the overall user experience.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-container"">
+                <div class=" glass-card">
+                            <div class="primary">50+</div>
+                            <div class="secondary">
+                                Projects Completed
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <div class="primary">3+</div>
+                            <div class="secondary">
+                                Years Experience
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <div class="primary">20+</div>
+                            <div class="secondary">
+                                Happy Clients
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <div class="primary">100%</div>
+                            <div class="secondary">
+                                Client Satisfaction
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
+            <!-- Skills section -->
+            <section class="skills" id="skills">
+                <div class="container">
+                    <div class="text">
+                        <h2>
+                            Technical Mastery
+                        </h2>
+                        <p>
+                            A comprehensive toolkit built for the modern web.
+                        </p>
+                    </div>
+                    <div class="cards-container">
+                        <!-- Skill Card -->
+                        <div class="glass-card">
+                            <span class="symbol" data-weight="fill">html</span>
+                            <span class="content">HTML5</span>
+                        </div>
+                        <div class="glass-card">
+                            <span class="symbol" data-weight="fill">css</span>
+                            <span class="content">CSS3</span>
+                        </div>
+                        <div class="glass-card">
+                            <span class="symbol" data-weight="fill">javascript</span>
+                            <span class="content">JavaScript</span>
+                        </div>
+                        <div class="glass-card">
+                            <span class="symbol" data-weight="fill">integration_instructions</span>
+                            <span class="content">React</span>
+                        </div>
+                        <div class="glass-card">
+                            <span class="symbol" data-weight="fill">terminal</span>
+                            <span class="content">Node.js</span>
+                        </div>
+                        <div class="glass-card">
+                            <span class="symbol" data-weight="fill">design_services</span>
+                            <span class="content">UI Design</span>
+                        </div>
+                        <div class="glass-card">
+                            <span class="symbol" data-weight="fill">navigation</span>
+                            <span class="content">Git</span>
+                        </div>
+                        <div class="glass-card">
+                            <span class="symbol" data-weight="fill">devices</span>
+                            <span class="content">Responsive Design</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Projects -->
+            <section class="projects" id="projects">
+                <div class="projects__container">
+                    <div class="projects__header">
+                        <div>
+                            <h2 class="projects__title">Selected Works</h2>
+                            <p class="projects__subtitle">
+                                Showcasing technical excellence and creative problem-solving.
+                            </p>
+                        </div>
+                        <a class="projects__link" href="#">
+                            View All Projects
+                            <span
+                                class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </a>
+                    </div>
+                    <div class="projects__grid">
+                        <!-- card 1 -->
+                        <article class="project-card">
+                            <div class="project-card__image-container">
+                                <img src="images/project-1.png" alt="FinTech Dashboard" class="project-card__image">
+                            </div>
+
+
+                            <div class="project-card__content">
+                                <h3 class="project-card__title">FinTech Dashboard</h3>
+
+                                <p class="project-card__text">
+                                    A real-time financial tracking platform with interactive charts
+                                    and automated expense categorization.
+                                </p>
+
+                                <div class="project-card__tags">
+                                    <span class="project-card__tag">React</span>
+                                    <span class="project-card__tag">D3.js</span>
+                                    <span class="project-card__tag">Node.js</span>
+                                </div>
+
+                                <div class="project-card__actions">
+                                    <button class="project-card__actions__btn ">
+                                        View Project
+                                    </button>
+                                    <button class="project-card__actions__icon">
+                                        <span class="material-symbols-outlined">code</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                        <!-- Card 2 -->
+                        <article class="project-card">
+                            <div class="project-card__image-container">
+                                <img src="images/project-2.png" alt="Elevate E-commerce" class="project-card__image">
+                            </div>
+
+                            <div class="project-card__content">
+                                <h3 class="project-card__title">Elevate E-commerce</h3>
+
+                                <p class="project-card__text">
+                                    A high-conversion boutique storefront focusing on minimalist
+                                    design and lightning-fast performance.
+                                </p>
+
+                                <div class="project-card__tags">
+                                    <span class="project-card__tag">Next.js</span>
+                                    <span class="project-card__tag">Tailwind</span>
+                                    <span class="project-card__tag">Stripe</span>
+                                </div>
+
+                                <div class="project-card__actions">
+                                    <button class="project-card__actions__btn ">
+                                        View Project
+                                    </button>
+                                    <button class="project-card__actions__icon">
+                                        <span class="material-symbols-outlined">code</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                        <!-- Card 3 -->
+                        <article class="project-card">
+                            <div class="project-card__image-container">
+                                <img src="images/project-3.png" alt="Neural Analytics" class="project-card__image">
+
+                            </div>
+
+                            <div class="project-card__content">
+                                <h3 class="project-card__title">Neural Analytics</h3>
+
+                                <p class="project-card__text">
+                                    An AI-powered insights engine visualizing complex dataset
+                                    connections with intuitive graph networks.
+                                </p>
+
+                                <div class="project-card__tags">
+                                    <span class="project-card__tag">Python</span>
+                                    <span class="project-card__tag">WebGL</span>
+                                    <span class="project-card__tag">React</span>
+                                </div>
+
+                                <div class="project-card__actions">
+                                    <button class="project-card__actions__btn ">
+                                        View Project
+                                    </button>
+                                    <button class="project-card__actions__icon">
+                                        <span class="material-symbols-outlined">code</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                    </div>
+            </section>
+        </main>
+    </body>
+
+</html>
