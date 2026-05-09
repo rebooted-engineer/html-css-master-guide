@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML & CSS — Fullstack Developer Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0c0e14;
+    --bg2:       #111520;
+    --bg3:       #171b28;
+    --surface:   #1c2133;
+    --border:    #252d45;
+    --accent:    #4f9eff;
+    --accent2:   #7c5cfc;
+    --accent3:   #00e5b0;
+    --warn:      #ffb347;
+    --danger:    #ff5f6d;
+    --text:      #d8dff0;
+    --text-dim:  #7a8aaa;
+    --text-faint:#3a4560;
+    --heading:   #eef2ff;
+    --tag-html:  #ff6b6b;
+    --tag-css:   #4f9eff;
+    --tag-proj:  #00e5b0;
+    --tag-ex:    #ffb347;
+    --tag-tip:   #c678dd;
+    --radius:    10px;
+    --mono:      'JetBrains Mono', monospace;
+    --sans:      'DM Sans', sans-serif;
+    --display:   'Syne', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+  }
+
+  /* ─── LAYOUT ─── */
+  .layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 270px; flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: sticky; top: 0; height: 100vh;
+    overflow-y: auto; overflow-x: hidden;
+    padding: 0 0 40px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .sidebar-logo .logo-main {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--heading);
+  }
+  .sidebar-logo .logo-sub {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .nav-group-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding: 18px 24px 6px;
+  }
+
+  .nav-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 24px;
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 0.83rem;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .nav-link:hover { color: var(--text); border-left-color: var(--accent); background: rgba(79,158,255,0.04); }
+  .nav-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(79,158,255,0.07); }
+  .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; }
+  .nav-link:hover .nav-dot { background: var(--accent); }
+  .nav-link.active .nav-dot { background: var(--accent); }
+
+  /* ─── MAIN CONTENT ─── */
+  .main { flex: 1; min-width: 0; padding: 60px 72px 120px 60px; max-width: 920px; }
+
+  /* ─── HERO ─── */
+  .hero {
+    margin-bottom: 80px;
+    padding: 60px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(79,158,255,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(124,92,252,0.07) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    color: var(--heading);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 560px;
+    line-height: 1.75;
+  }
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 36px;
+    flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num {
+    font-family: var(--display);
+    font-size: 1.9rem; font-weight: 800;
+    color: var(--heading); letter-spacing: -0.03em;
+  }
+  .hero-stat .lbl { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+  .hero-stat .num.blue { color: var(--accent); }
+  .hero-stat .num.purple { color: var(--accent2); }
+  .hero-stat .num.green { color: var(--accent3); }
+
+  /* ─── SECTION ─── */
+  .section { margin-bottom: 80px; }
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 32px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.7rem; color: var(--text-faint);
+    border: 1px solid var(--border);
+    padding: 3px 8px; border-radius: 4px;
+  }
+  .section h2 {
+    font-family: var(--display);
+    font-size: 1.65rem; font-weight: 700;
+    color: var(--heading); letter-spacing: -0.02em;
+  }
+  .section h3 {
+    font-family: var(--display);
+    font-size: 1.15rem; font-weight: 600;
+    color: var(--heading); letter-spacing: -0.01em;
+    margin: 32px 0 14px;
+  }
+  .section h4 {
+    font-family: var(--sans);
+    font-size: 0.9rem; font-weight: 500;
+    color: var(--accent); text-transform: uppercase;
+    letter-spacing: 0.1em; margin: 22px 0 10px;
+  }
+  .section p { color: var(--text-dim); margin-bottom: 14px; }
+  .section ul, .section ol { color: var(--text-dim); padding-left: 20px; margin-bottom: 14px; }
+  .section li { margin-bottom: 6px; }
+  .section strong { color: var(--text); font-weight: 500; }
+  .section a { color: var(--accent); text-decoration: none; }
+  .section a:hover { text-decoration: underline; }
+
+  /* ─── TAGS ─── */
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.65rem; font-weight: 500;
+    padding: 2px 8px; border-radius: 4px;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    margin-right: 6px; margin-bottom: 4px;
+  }
+  .tag-html { background: rgba(255,107,107,0.12); color: var(--tag-html); border: 1px solid rgba(255,107,107,0.2); }
+  .tag-css  { background: rgba(79,158,255,0.12);  color: var(--tag-css);  border: 1px solid rgba(79,158,255,0.2);  }
+  .tag-proj { background: rgba(0,229,176,0.10);   color: var(--tag-proj); border: 1px solid rgba(0,229,176,0.2);   }
+  .tag-ex   { background: rgba(255,179,71,0.10);  color: var(--tag-ex);   border: 1px solid rgba(255,179,71,0.2);  }
+  .tag-tip  { background: rgba(198,120,221,0.10); color: var(--tag-tip);  border: 1px solid rgba(198,120,221,0.2); }
+
+  /* ─── CODE BLOCK ─── */
+  .code-block {
+    background: #0a0d14;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 18px 0;
+    overflow: hidden;
+  }
+  .code-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg3);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang {
+    font-family: var(--mono);
+    font-size: 0.65rem; color: var(--text-faint);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .code-dots { display: flex; gap: 5px; }
+  .code-dots span { width: 8px; height: 8px; border-radius: 50%; }
+  .code-dots .d1 { background: #ff5f57; }
+  .code-dots .d2 { background: #febc2e; }
+  .code-dots .d3 { background: #28c840; }
+  pre {
+    padding: 20px 22px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.75;
+    overflow-x: auto;
+    color: #b8c5e0;
+  }
+  /* Syntax highlights */
+  .hl-tag   { color: #ff6b6b; }
+  .hl-attr  { color: #ffb347; }
+  .hl-val   { color: #98c379; }
+  .hl-prop  { color: #61dafb; }
+  .hl-num   { color: #d19a66; }
+  .hl-sel   { color: #c678dd; }
+  .hl-com   { color: #4b5a7a; font-style: italic; }
+  .hl-str   { color: #98c379; }
+  .hl-kw    { color: #7c5cfc; }
+  .hl-fn    { color: #4f9eff; }
+
+  /* ─── CARDS ─── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card-icon { font-size: 1.6rem; margin-bottom: 10px; }
+  .card-title { font-family: var(--display); font-weight: 700; color: var(--heading); margin-bottom: 6px; font-size: 0.95rem; }
+  .card-desc  { font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    border-left: 3px solid;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+  .callout-tip    { background: rgba(198,120,221,0.06); border-color: var(--tag-tip);  color: #c0a8d8; }
+  .callout-warn   { background: rgba(255,179,71,0.06);  border-color: var(--warn);     color: #c8a870; }
+  .callout-info   { background: rgba(79,158,255,0.06);  border-color: var(--accent);   color: #8ab4dd; }
+  .callout-good   { background: rgba(0,229,176,0.06);   border-color: var(--accent3);  color: #7ac8b5; }
+  .callout-label  { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* ─── EXERCISE / PROJECT BOX ─── */
+  .exercise-box, .project-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 24px 0;
+  }
+  .exercise-box { border-top: 3px solid var(--tag-ex); }
+  .project-box  { border-top: 3px solid var(--tag-proj); }
+  .box-title {
+    font-family: var(--display);
+    font-weight: 700; font-size: 0.95rem;
+    color: var(--heading); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .box-meta { font-family: var(--mono); font-size: 0.68rem; color: var(--text-dim); margin-bottom: 14px; }
+  .box-steps { padding-left: 18px; color: var(--text-dim); font-size: 0.86rem; }
+  .box-steps li { margin-bottom: 8px; }
+  .difficulty { display: inline-block; font-family: var(--mono); font-size: 0.6rem; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .diff-easy   { background: rgba(0,229,176,0.12); color: var(--accent3); border: 1px solid rgba(0,229,176,0.2); }
+  .diff-medium { background: rgba(255,179,71,0.12); color: var(--warn);   border: 1px solid rgba(255,179,71,0.2); }
+  .diff-hard   { background: rgba(255,95,109,0.12); color: var(--danger); border: 1px solid rgba(255,95,109,0.2); }
+
+  /* ─── PROP TABLE ─── */
+  .prop-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.84rem; }
+  .prop-table th {
+    text-align: left; padding: 10px 14px;
+    font-family: var(--mono); font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-faint); background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+  }
+  .prop-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: top; }
+  .prop-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .prop-table .prop-name { font-family: var(--mono); color: var(--accent3); font-size: 0.8rem; }
+  .prop-table .prop-vals { font-family: var(--mono); color: var(--tag-ex); font-size: 0.78rem; }
+  .prop-table .prop-desc { line-height: 1.55; }
+
+  /* ─── INLINE CODE ─── */
+  code { font-family: var(--mono); font-size: 0.82em; background: rgba(79,158,255,0.1); color: var(--accent); padding: 1px 6px; border-radius: 4px; }
+
+  /* ─── DIVIDER ─── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 50px 0; }
+
+  /* ─── TWO COL ─── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ─── PROGRESS BAR ─── */
+  .toc-progress {
+    height: 2px; background: var(--border);
+    margin: 0 24px 8px; border-radius: 1px;
+  }
+  .toc-progress-fill {
+    height: 100%; width: 30%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 1px;
+  }
+
+  /* ─── CHEATSHEET GRID ─── */
+  .cheat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .cheat-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .cheat-item .ci-prop { font-family: var(--mono); font-size: 0.78rem; color: var(--accent3); margin-bottom: 4px; }
+  .cheat-item .ci-val  { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+
+  /* ─── FOOTER ─── */
+  .guide-footer {
+    margin-top: 80px; padding: 40px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-align: center;
+  }
+  .guide-footer h3 { font-family: var(--display); font-size: 1.4rem; font-weight: 800; color: var(--heading); margin-bottom: 10px; }
+  .guide-footer p { color: var(--text-dim); font-size: 0.88rem; }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 32px 24px 80px; }
+    .two-col { grid-template-columns: 1fr; }
+    .hero { padding: 36px 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-main">HTML &amp; CSS Guide</div>
+    <div class="logo-sub">Fullstack Reference v2025</div>
+  </div>
+
+  <div class="nav-group-label">Foundations</div>
+  <a class="nav-link" href="#s1"><span class="nav-dot"></span>1 · HTML Fundamentals</a>
+  <a class="nav-link" href="#s2"><span class="nav-dot"></span>2 · Document Structure</a>
+  <a class="nav-link" href="#s3"><span class="nav-dot"></span>3 · Semantic HTML</a>
+  <a class="nav-link" href="#s4"><span class="nav-dot"></span>4 · Forms &amp; Inputs</a>
+  <a class="nav-link" href="#s5"><span class="nav-dot"></span>5 · Multimedia &amp; SVG</a>
+
+  <div class="nav-group-label">CSS Core</div>
+  <a class="nav-link" href="#s6"><span class="nav-dot"></span>6 · CSS Selectors</a>
+  <a class="nav-link" href="#s7"><span class="nav-dot"></span>7 · Box Model &amp; Display</a>
+  <a class="nav-link" href="#s8"><span class="nav-dot"></span>8 · Typography</a>
+  <a class="nav-link" href="#s9"><span class="nav-dot"></span>9 · Colors &amp; Backgrounds</a>
+  <a class="nav-link" href="#s10"><span class="nav-dot"></span>10 · Spacing &amp; Sizing</a>
+
+  <div class="nav-group-label">Layouts</div>
+  <a class="nav-link" href="#s11"><span class="nav-dot"></span>11 · Flexbox</a>
+  <a class="nav-link" href="#s12"><span class="nav-dot"></span>12 · CSS Grid</a>
+  <a class="nav-link" href="#s13"><span class="nav-dot"></span>13 · Positioning</a>
+  <a class="nav-link" href="#s14"><span class="nav-dot"></span>14 · Responsive Design</a>
+
+  <div class="nav-group-label">Advanced CSS</div>
+  <a class="nav-link" href="#s15"><span class="nav-dot"></span>15 · Variables &amp; Cascade</a>
+  <a class="nav-link" href="#s16"><span class="nav-dot"></span>16 · Transforms &amp; Transitions</a>
+  <a class="nav-link" href="#s17"><span class="nav-dot"></span>17 · Animations &amp; Keyframes</a>
+  <a class="nav-link" href="#s18"><span class="nav-dot"></span>18 · Pseudo-classes &amp; elements</a>
+  <a class="nav-link" href="#s19"><span class="nav-dot"></span>19 · Modern CSS Features</a>
+
+  <div class="nav-group-label">Architecture</div>
+  <a class="nav-link" href="#s20"><span class="nav-dot"></span>20 · Accessibility</a>
+  <a class="nav-link" href="#s21"><span class="nav-dot"></span>21 · Performance</a>
+  <a class="nav-link" href="#s22"><span class="nav-dot"></span>22 · CSS Architecture</a>
+
+  <div class="nav-group-label">Projects</div>
+  <a class="nav-link" href="#projects"><span class="nav-dot"></span>Final Projects</a>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">// fullstack developer reference</div>
+    <h1>HTML &amp; <span>CSS</span><br>Master Guide</h1>
+    <p>Everything a fullstack developer needs to know — from semantic structure to modern layout systems, animations, architecture, accessibility, and production performance.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num blue">22</div><div class="lbl">Sections</div></div>
+      <div class="hero-stat"><div class="num purple">40+</div><div class="lbl">Exercises</div></div>
+      <div class="hero-stat"><div class="num green">8</div><div class="lbl">Projects</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ SECTION 1 ═══════════════════════════════ -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>HTML Fundamentals</h2>
+      <span class="tag tag-html">HTML</span>
+    </div>
+
+    <p>HTML (HyperText Markup Language) is the skeleton of every webpage. It provides <strong>structure and meaning</strong> to content — not styling. Understanding it deeply is non-negotiable for fullstack work.</p>
+
+    <h3>Anatomy of an HTML Element</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">html</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">&lt;!-- Opening tag  Attribute name  Attribute value  Content  Closing tag --&gt;</span>
+<span class="hl-tag">&lt;a</span> <span class="hl-attr">href</span>=<span class="hl-val">"https://example.com"</span> <span class="hl-attr">target</span>=<span class="hl-val">"_blank"</span><span class="hl-tag">&gt;</span>Visit Example<span class="hl-tag">&lt;/a&gt;</span>
+
+<span class="hl-com">&lt;!-- Void (self-closing) elements have no closing tag --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"photo.jpg"</span> <span class="hl-attr">alt</span>=<span class="hl-val">"A scenic view"</span> <span class="hl-attr">width</span>=<span class="hl-val">"800"</span> <span class="hl-attr">height</span>=<span class="hl-val">"600"</span><span class="hl-tag">&gt;</span>
+<span class="hl-tag">&lt;br&gt;</span>  <span class="hl-tag">&lt;hr&gt;</span>  <span class="hl-tag">&lt;input&gt;</span>  <span class="hl-tag">&lt;meta&gt;</span>  <span class="hl-tag">&lt;link&gt;</span>  <span class="hl-tag">&lt;source&gt;</span></pre>
+    </div>
+
+    <h3>Global Attributes</h3>
+    <p>These apply to <strong>any</strong> HTML element:</p>
+    <table class="prop-table">
+      <tr><th>Attribute</th><th>Purpose</th><th>Example</th></tr>
+      <tr><td class="prop-name">id</td><td class="prop-desc">Unique identifier on page</td><td class="prop-vals">id="header"</td></tr>
+      <tr><td class="prop-name">class</td><td class="prop-desc">CSS class targeting (space-separated)</td><td class="prop-vals">class="card active"</td></tr>
+      <tr><td class="prop-name">data-*</td><td class="prop-desc">Custom data attributes for JS</td><td class="prop-vals">data-user-id="42"</td></tr>
+      <tr><td class="prop-name">style</td><td class="prop-desc">Inline CSS (avoid in production)</td><td class="prop-vals">style="color:red"</td></tr>
+      <tr><td class="prop-name">hidden</td><td class="prop-desc">Hides element from rendering</td><td class="prop-vals">hidden</td></tr>
+      <tr><td class="prop-name">tabindex</td><td class="prop-desc">Controls keyboard focus order</td><td class="prop-vals">tabindex="0"</td></tr>
+      <tr><td class="prop-name">contenteditable</td><td class="prop-desc">Makes element editable inline</td><td class="prop-vals">contenteditable="true"</td></tr>
+      <tr><td class="prop-name">draggable</td><td class="prop-desc">Enables drag-and-drop</td><td class="prop-vals">draggable="true"</td></tr>
+      <tr><td class="prop-name">lang</td><td class="prop-desc">Language of element's content</td><td class="prop-vals">lang="en"</td></tr>
+      <tr><td class="prop-name">title</td><td class="prop-desc">Tooltip on hover</td><td class="prop-vals">title="More info"</td></tr>
+      <tr><td class="prop-name">aria-*</td><td class="prop-desc">Accessibility roles/properties</td><td class="prop-vals">aria-label="Close"</td></tr>
+      <tr><td class="prop-name">role</td><td class="prop-desc">ARIA semantic role</td><td class="prop-vals">role="dialog"</td></tr>
+    </table>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 1.1 <span class="difficulty diff-easy">Easy</span></div>
+      <div class="box-meta">Topic: Elements &amp; Attributes</div>
+      <ol class="box-steps">
+        <li>Create an HTML file with a heading, paragraph, image (with meaningful alt text), and a link that opens in a new tab.</li>
+        <li>Add <code>data-category</code> attributes to at least 3 elements.</li>
+        <li>Use <code>title</code> attribute on the link to show a helpful tooltip.</li>
+        <li>Validate your HTML at <strong>validator.w3.org</strong> — fix all errors.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 2 ═══════════════════════════════ -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Document Structure</h2>
+      <span class="tag tag-html">HTML</span>
+    </div>
+
+    <h3>The Complete Boilerplate</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">html</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="hl-tag">&lt;html</span> <span class="hl-attr">lang</span>=<span class="hl-val">"en"</span><span class="hl-tag">&gt;</span>
+<span class="hl-tag">&lt;head&gt;</span>
+  <span class="hl-com">&lt;!-- Character encoding — always first --&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">charset</span>=<span class="hl-val">"UTF-8"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-com">&lt;!-- Responsive viewport --&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">name</span>=<span class="hl-val">"viewport"</span> <span class="hl-attr">content</span>=<span class="hl-val">"width=device-width, initial-scale=1.0"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-com">&lt;!-- SEO meta tags --&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">name</span>=<span class="hl-val">"description"</span> <span class="hl-attr">content</span>=<span class="hl-val">"Page description for search engines"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">name</span>=<span class="hl-val">"keywords"</span> <span class="hl-attr">content</span>=<span class="hl-val">"html, css, tutorial"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">name</span>=<span class="hl-val">"author"</span> <span class="hl-attr">content</span>=<span class="hl-val">"Your Name"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-com">&lt;!-- Open Graph (social media previews) --&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">property</span>=<span class="hl-val">"og:title"</span> <span class="hl-attr">content</span>=<span class="hl-val">"Page Title"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">property</span>=<span class="hl-val">"og:description"</span> <span class="hl-attr">content</span>=<span class="hl-val">"Description"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">property</span>=<span class="hl-val">"og:image"</span> <span class="hl-attr">content</span>=<span class="hl-val">"https://example.com/image.jpg"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;meta</span> <span class="hl-attr">property</span>=<span class="hl-val">"og:url"</span> <span class="hl-attr">content</span>=<span class="hl-val">"https://example.com"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-com">&lt;!-- Favicon --&gt;</span>
+  <span class="hl-tag">&lt;link</span> <span class="hl-attr">rel</span>=<span class="hl-val">"icon"</span> <span class="hl-attr">type</span>=<span class="hl-val">"image/png"</span> <span class="hl-attr">href</span>=<span class="hl-val">"/favicon.png"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-com">&lt;!-- Fonts — preconnect for performance --&gt;</span>
+  <span class="hl-tag">&lt;link</span> <span class="hl-attr">rel</span>=<span class="hl-val">"preconnect"</span> <span class="hl-attr">href</span>=<span class="hl-val">"https://fonts.googleapis.com"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-com">&lt;!-- Canonical URL (prevents duplicate content) --&gt;</span>
+  <span class="hl-tag">&lt;link</span> <span class="hl-attr">rel</span>=<span class="hl-val">"canonical"</span> <span class="hl-attr">href</span>=<span class="hl-val">"https://example.com/page"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-com">&lt;!-- Stylesheet --&gt;</span>
+  <span class="hl-tag">&lt;link</span> <span class="hl-attr">rel</span>=<span class="hl-val">"stylesheet"</span> <span class="hl-attr">href</span>=<span class="hl-val">"styles.css"</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-tag">&lt;title&gt;</span>Page Title | Site Name<span class="hl-tag">&lt;/title&gt;</span>
+<span class="hl-tag">&lt;/head&gt;</span>
+<span class="hl-tag">&lt;body&gt;</span>
+  <span class="hl-com">&lt;!-- Content goes here --&gt;</span>
+
+  <span class="hl-com">&lt;!-- Scripts at end of body for performance --&gt;</span>
+  <span class="hl-tag">&lt;script</span> <span class="hl-attr">src</span>=<span class="hl-val">"app.js"</span> <span class="hl-attr">defer</span><span class="hl-tag">&gt;&lt;/script&gt;</span>
+<span class="hl-tag">&lt;/body&gt;</span>
+<span class="hl-tag">&lt;/html&gt;</span></pre>
+    </div>
+
+    <div class="callout callout-tip"><div class="callout-label">💡 Pro Tip</div>Use <code>defer</code> on scripts to load them without blocking HTML parsing. Use <code>async</code> for scripts that don't depend on DOM or other scripts. Never use bare <code>&lt;script&gt;</code> in <code>&lt;head&gt;</code> without defer/async.</div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 2.1 <span class="difficulty diff-easy">Easy</span></div>
+      <div class="box-meta">Topic: Document Head</div>
+      <ol class="box-steps">
+        <li>Build a complete HTML boilerplate from memory.</li>
+        <li>Add full Open Graph tags and test with <strong>opengraph.xyz</strong>.</li>
+        <li>Add a <code>&lt;meta name="theme-color"&gt;</code> and test on mobile Chrome.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 3 ═══════════════════════════════ -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Semantic HTML</h2>
+      <span class="tag tag-html">HTML</span>
+      <span class="tag tag-tip">Accessibility</span>
+    </div>
+
+    <p>Semantic HTML gives <strong>meaning</strong> to structure. It matters for SEO, screen readers, and maintainability. A fullstack dev who ships <code>&lt;div&gt;</code> soup is a junior dev regardless of their backend skills.</p>
+
+    <h3>Page-Level Landmarks</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">html — page layout</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-tag">&lt;body&gt;</span>
+  <span class="hl-tag">&lt;header&gt;</span>             <span class="hl-com">&lt;!-- Site-wide header, logo, top nav --&gt;</span>
+    <span class="hl-tag">&lt;nav&gt;</span>               <span class="hl-com">&lt;!-- Primary navigation links --&gt;</span>
+      <span class="hl-tag">&lt;ul&gt;&lt;li&gt;&lt;a</span> <span class="hl-attr">href</span>=<span class="hl-val">"/"</span><span class="hl-tag">&gt;</span>Home<span class="hl-tag">&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;</span>
+    <span class="hl-tag">&lt;/nav&gt;</span>
+  <span class="hl-tag">&lt;/header&gt;</span>
+
+  <span class="hl-tag">&lt;main&gt;</span>               <span class="hl-com">&lt;!-- ONE per page — the unique content --&gt;</span>
+    <span class="hl-tag">&lt;article&gt;</span>          <span class="hl-com">&lt;!-- Self-contained content (blog post, card) --&gt;</span>
+      <span class="hl-tag">&lt;h1&gt;</span>Post Title<span class="hl-tag">&lt;/h1&gt;</span>
+      <span class="hl-tag">&lt;section&gt;</span>         <span class="hl-com">&lt;!-- Themed section within article --&gt;</span>
+        <span class="hl-tag">&lt;h2&gt;</span>Introduction<span class="hl-tag">&lt;/h2&gt;</span>
+        <span class="hl-tag">&lt;p&gt;</span>...<span class="hl-tag">&lt;/p&gt;</span>
+      <span class="hl-tag">&lt;/section&gt;</span>
+    <span class="hl-tag">&lt;/article&gt;</span>
+
+    <span class="hl-tag">&lt;aside&gt;</span>             <span class="hl-com">&lt;!-- Sidebar, related links, ads --&gt;</span>
+      <span class="hl-tag">&lt;p&gt;</span>Related posts...<span class="hl-tag">&lt;/p&gt;</span>
+    <span class="hl-tag">&lt;/aside&gt;</span>
+  <span class="hl-tag">&lt;/main&gt;</span>
+
+  <span class="hl-tag">&lt;footer&gt;</span>             <span class="hl-com">&lt;!-- Copyright, links, contact --&gt;</span>
+    <span class="hl-tag">&lt;address&gt;</span>contact@site.com<span class="hl-tag">&lt;/address&gt;</span>
+  <span class="hl-tag">&lt;/footer&gt;</span>
+<span class="hl-tag">&lt;/body&gt;</span></pre>
+    </div>
+
+    <h3>Content Semantics Cheatsheet</h3>
+    <table class="prop-table">
+      <tr><th>Element</th><th>Use when…</th><th>Don't use for…</th></tr>
+      <tr><td class="prop-name">&lt;h1&gt;–&lt;h6&gt;</td><td class="prop-desc">Hierarchical headings — one h1 per page</td><td class="prop-desc">Bold text, decorative sizing</td></tr>
+      <tr><td class="prop-name">&lt;p&gt;</td><td class="prop-desc">Paragraphs of prose</td><td class="prop-desc">Line breaks or spacing hacks</td></tr>
+      <tr><td class="prop-name">&lt;ul&gt; / &lt;ol&gt;</td><td class="prop-desc">Unordered/ordered lists</td><td class="prop-desc">Navigation (use nav+ul)</td></tr>
+      <tr><td class="prop-name">&lt;dl&gt; &lt;dt&gt; &lt;dd&gt;</td><td class="prop-desc">Definition/description lists</td><td class="prop-desc">Key-value pairs in general</td></tr>
+      <tr><td class="prop-name">&lt;figure&gt; / &lt;figcaption&gt;</td><td class="prop-desc">Images with captions, diagrams</td><td class="prop-desc">Decorative images</td></tr>
+      <tr><td class="prop-name">&lt;blockquote&gt;</td><td class="prop-desc">Quoted text from another source</td><td class="prop-desc">Indentation styling</td></tr>
+      <tr><td class="prop-name">&lt;cite&gt;</td><td class="prop-desc">Title of creative work being cited</td><td class="prop-desc">Author attribution</td></tr>
+      <tr><td class="prop-name">&lt;time&gt;</td><td class="prop-desc">Dates/times (machine-readable)</td><td class="prop-desc">Durations as plain text</td></tr>
+      <tr><td class="prop-name">&lt;mark&gt;</td><td class="prop-desc">Highlighted/search-result text</td><td class="prop-desc">General emphasis</td></tr>
+      <tr><td class="prop-name">&lt;strong&gt;</td><td class="prop-desc">Strong importance</td><td class="prop-desc">Bold for styling only (use CSS)</td></tr>
+      <tr><td class="prop-name">&lt;em&gt;</td><td class="prop-desc">Stress emphasis</td><td class="prop-desc">Italic for styling only</td></tr>
+      <tr><td class="prop-name">&lt;abbr&gt;</td><td class="prop-desc">Abbreviations with title="…"</td><td class="prop-desc">Acronyms that are self-evident</td></tr>
+      <tr><td class="prop-name">&lt;details&gt; / &lt;summary&gt;</td><td class="prop-desc">Native accordion / disclosure</td><td class="prop-desc">Complex interactive components</td></tr>
+      <tr><td class="prop-name">&lt;dialog&gt;</td><td class="prop-desc">Modal dialogs (native)</td><td class="prop-desc">Tooltips or dropdowns</td></tr>
+      <tr><td class="prop-name">&lt;progress&gt;</td><td class="prop-desc">Task completion bars</td><td class="prop-desc">Decorative bars</td></tr>
+      <tr><td class="prop-name">&lt;meter&gt;</td><td class="prop-desc">Scalar measurement within range</td><td class="prop-desc">Generic bars</td></tr>
+    </table>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 3.1 <span class="difficulty diff-medium">Medium</span></div>
+      <div class="box-meta">Topic: Semantic Refactoring</div>
+      <ol class="box-steps">
+        <li>Take a page made entirely of <code>&lt;div&gt;</code> and <code>&lt;span&gt;</code> tags and refactor it to use proper semantic elements.</li>
+        <li>Verify with an accessibility audit: open DevTools → Lighthouse → Accessibility. Target 90+.</li>
+        <li>Use <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> to build a FAQ section with NO JavaScript.</li>
+        <li>Add <code>&lt;time datetime="2025-01-15"&gt;</code> for all dates on the page.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 4 ═══════════════════════════════ -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Forms &amp; Inputs</h2>
+      <span class="tag tag-html">HTML</span>
+    </div>
+
+    <p>Forms are how users talk to your backend. Getting them right — semantics, validation, accessibility — is a core fullstack skill.</p>
+
+    <h3>Complete Form Reference</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">html</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-tag">&lt;form</span>
+  <span class="hl-attr">action</span>=<span class="hl-val">"/api/submit"</span>    <span class="hl-com">&lt;!-- Where to send data --&gt;</span>
+  <span class="hl-attr">method</span>=<span class="hl-val">"post"</span>          <span class="hl-com">&lt;!-- GET or POST --&gt;</span>
+  <span class="hl-attr">enctype</span>=<span class="hl-val">"multipart/form-data"</span>  <span class="hl-com">&lt;!-- Required for file uploads --&gt;</span>
+  <span class="hl-attr">novalidate</span>             <span class="hl-com">&lt;!-- Disable browser validation (use custom) --&gt;</span>
+  <span class="hl-attr">autocomplete</span>=<span class="hl-val">"on"</span>
+<span class="hl-tag">&gt;</span>
+  <span class="hl-com">&lt;!-- Every input needs a label --&gt;</span>
+  <span class="hl-tag">&lt;label</span> <span class="hl-attr">for</span>=<span class="hl-val">"email"</span><span class="hl-tag">&gt;</span>Email Address<span class="hl-tag">&lt;/label&gt;</span>
+  <span class="hl-tag">&lt;input</span>
+    <span class="hl-attr">type</span>=<span class="hl-val">"email"</span>
+    <span class="hl-attr">id</span>=<span class="hl-val">"email"</span>
+    <span class="hl-attr">name</span>=<span class="hl-val">"email"</span>
+    <span class="hl-attr">placeholder</span>=<span class="hl-val">"you@example.com"</span>
+    <span class="hl-attr">required</span>
+    <span class="hl-attr">autocomplete</span>=<span class="hl-val">"email"</span>
+    <span class="hl-attr">aria-describedby</span>=<span class="hl-val">"email-hint"</span>
+  <span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;span</span> <span class="hl-attr">id</span>=<span class="hl-val">"email-hint"</span><span class="hl-tag">&gt;</span>We'll never share your email.<span class="hl-tag">&lt;/span&gt;</span>
+
+  <span class="hl-com">&lt;!-- Fieldset groups related controls --&gt;</span>
+  <span class="hl-tag">&lt;fieldset&gt;</span>
+    <span class="hl-tag">&lt;legend&gt;</span>Preferred contact method<span class="hl-tag">&lt;/legend&gt;</span>
+    <span class="hl-tag">&lt;label&gt;&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"radio"</span> <span class="hl-attr">name</span>=<span class="hl-val">"contact"</span> <span class="hl-attr">value</span>=<span class="hl-val">"email"</span><span class="hl-tag">&gt;</span> Email<span class="hl-tag">&lt;/label&gt;</span>
+    <span class="hl-tag">&lt;label&gt;&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"radio"</span> <span class="hl-attr">name</span>=<span class="hl-val">"contact"</span> <span class="hl-attr">value</span>=<span class="hl-val">"phone"</span><span class="hl-tag">&gt;</span> Phone<span class="hl-tag">&lt;/label&gt;</span>
+  <span class="hl-tag">&lt;/fieldset&gt;</span>
+
+  <span class="hl-tag">&lt;button</span> <span class="hl-attr">type</span>=<span class="hl-val">"submit"</span><span class="hl-tag">&gt;</span>Submit<span class="hl-tag">&lt;/button&gt;</span>
+  <span class="hl-tag">&lt;button</span> <span class="hl-attr">type</span>=<span class="hl-val">"reset"</span><span class="hl-tag">&gt;</span>Clear<span class="hl-tag">&lt;/button&gt;</span>
+<span class="hl-tag">&lt;/form&gt;</span></pre>
+    </div>
+
+    <h3>Input Types Reference</h3>
+    <div class="cheat-grid">
+      <div class="cheat-item"><div class="ci-prop">type="text"</div><div class="ci-val">Single-line text</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="email"</div><div class="ci-val">Email with validation</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="password"</div><div class="ci-val">Masked text</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="number"</div><div class="ci-val">Numeric + min/max/step</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="tel"</div><div class="ci-val">Phone (no validation)</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="url"</div><div class="ci-val">URL format validation</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="date"</div><div class="ci-val">Date picker</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="time"</div><div class="ci-val">Time picker</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="datetime-local"</div><div class="ci-val">Date + time</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="range"</div><div class="ci-val">Slider with min/max</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="color"</div><div class="ci-val">Color picker</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="file"</div><div class="ci-val">File upload</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="checkbox"</div><div class="ci-val">Boolean toggle</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="radio"</div><div class="ci-val">Single from group</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="search"</div><div class="ci-val">Search with clear btn</div></div>
+      <div class="cheat-item"><div class="ci-prop">type="hidden"</div><div class="ci-val">Hidden data field</div></div>
+    </div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 4.1 <span class="difficulty diff-medium">Medium</span></div>
+      <div class="box-meta">Topic: Accessible Form Building</div>
+      <ol class="box-steps">
+        <li>Build a full registration form: name, email, password (with pattern validation), date of birth, gender (radio), country (select), bio (textarea), file upload for avatar, and terms checkbox.</li>
+        <li>Every input must have a <code>&lt;label for&gt;</code> and use proper <code>autocomplete</code> attributes.</li>
+        <li>Add HTML5 constraint validation attributes: <code>required</code>, <code>minlength</code>, <code>maxlength</code>, <code>pattern</code>, <code>min</code>, <code>max</code>.</li>
+        <li>Style <code>:valid</code> and <code>:invalid</code> states with CSS (green/red borders).</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 5 ═══════════════════════════════ -->
+  <section class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Multimedia &amp; SVG</h2>
+      <span class="tag tag-html">HTML</span>
+    </div>
+
+    <h3>Responsive Images</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">html</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">&lt;!-- Basic responsive image --&gt;</span>
+<span class="hl-tag">&lt;img</span>
+  <span class="hl-attr">src</span>=<span class="hl-val">"hero.jpg"</span>
+  <span class="hl-attr">srcset</span>=<span class="hl-val">"hero-480.jpg 480w, hero-800.jpg 800w, hero-1200.jpg 1200w"</span>
+  <span class="hl-attr">sizes</span>=<span class="hl-val">"(max-width: 600px) 480px, (max-width: 1000px) 800px, 1200px"</span>
+  <span class="hl-attr">alt</span>=<span class="hl-val">"Mountain landscape at dawn"</span>
+  <span class="hl-attr">width</span>=<span class="hl-val">"1200"</span> <span class="hl-attr">height</span>=<span class="hl-val">"630"</span>
+  <span class="hl-attr">loading</span>=<span class="hl-val">"lazy"</span>
+  <span class="hl-attr">decoding</span>=<span class="hl-val">"async"</span>
+<span class="hl-tag">&gt;</span>
+
+<span class="hl-com">&lt;!-- Art direction with &lt;picture&gt; --&gt;</span>
+<span class="hl-tag">&lt;picture&gt;</span>
+  <span class="hl-tag">&lt;source</span> <span class="hl-attr">media</span>=<span class="hl-val">"(min-width: 800px)"</span> <span class="hl-attr">srcset</span>=<span class="hl-val">"desktop.webp"</span> <span class="hl-attr">type</span>=<span class="hl-val">"image/webp"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;source</span> <span class="hl-attr">media</span>=<span class="hl-val">"(min-width: 800px)"</span> <span class="hl-attr">srcset</span>=<span class="hl-val">"desktop.jpg"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;source</span> <span class="hl-attr">srcset</span>=<span class="hl-val">"mobile.webp"</span> <span class="hl-attr">type</span>=<span class="hl-val">"image/webp"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"mobile.jpg"</span> <span class="hl-attr">alt</span>=<span class="hl-val">"Description"</span><span class="hl-tag">&gt;</span>
+<span class="hl-tag">&lt;/picture&gt;</span>
+
+<span class="hl-com">&lt;!-- Video with fallback --&gt;</span>
+<span class="hl-tag">&lt;video</span> <span class="hl-attr">controls</span> <span class="hl-attr">poster</span>=<span class="hl-val">"thumbnail.jpg"</span> <span class="hl-attr">preload</span>=<span class="hl-val">"metadata"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;source</span> <span class="hl-attr">src</span>=<span class="hl-val">"video.webm"</span> <span class="hl-attr">type</span>=<span class="hl-val">"video/webm"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;source</span> <span class="hl-attr">src</span>=<span class="hl-val">"video.mp4"</span>  <span class="hl-attr">type</span>=<span class="hl-val">"video/mp4"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;track</span> <span class="hl-attr">kind</span>=<span class="hl-val">"subtitles"</span> <span class="hl-attr">src</span>=<span class="hl-val">"subs.vtt"</span> <span class="hl-attr">srclang</span>=<span class="hl-val">"en"</span> <span class="hl-attr">label</span>=<span class="hl-val">"English"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;p&gt;</span>Your browser doesn't support video.<span class="hl-tag">&lt;/p&gt;</span>
+<span class="hl-tag">&lt;/video&gt;</span></pre>
+    </div>
+
+    <h3>Inline SVG</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">svg</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">&lt;!-- Inline SVG is styleable with CSS, accessible, performant --&gt;</span>
+<span class="hl-tag">&lt;svg</span>
+  <span class="hl-attr">xmlns</span>=<span class="hl-val">"http://www.w3.org/2000/svg"</span>
+  <span class="hl-attr">viewBox</span>=<span class="hl-val">"0 0 24 24"</span>
+  <span class="hl-attr">width</span>=<span class="hl-val">"24"</span> <span class="hl-attr">height</span>=<span class="hl-val">"24"</span>
+  <span class="hl-attr">aria-hidden</span>=<span class="hl-val">"true"</span>    <span class="hl-com">&lt;!-- Decorative icon — hide from AT --&gt;</span>
+  <span class="hl-attr">focusable</span>=<span class="hl-val">"false"</span>
+<span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;path</span>
+    <span class="hl-attr">d</span>=<span class="hl-val">"M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"</span>
+    <span class="hl-attr">stroke</span>=<span class="hl-val">"currentColor"</span>    <span class="hl-com">&lt;!-- Inherits CSS color --&gt;</span>
+    <span class="hl-attr">fill</span>=<span class="hl-val">"none"</span>
+    <span class="hl-attr">stroke-width</span>=<span class="hl-val">"2"</span>
+  <span class="hl-tag">/&gt;</span>
+<span class="hl-tag">&lt;/svg&gt;</span>
+
+<span class="hl-com">&lt;!-- SVG sprite system --&gt;</span>
+<span class="hl-tag">&lt;svg</span> <span class="hl-attr">style</span>=<span class="hl-val">"display:none"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;symbol</span> <span class="hl-attr">id</span>=<span class="hl-val">"icon-home"</span> <span class="hl-attr">viewBox</span>=<span class="hl-val">"0 0 24 24"</span><span class="hl-tag">&gt;</span>...<span class="hl-tag">&lt;/symbol&gt;</span>
+<span class="hl-tag">&lt;/svg&gt;</span>
+<span class="hl-com">&lt;!-- Use it anywhere --&gt;</span>
+<span class="hl-tag">&lt;svg&gt;&lt;use</span> <span class="hl-attr">href</span>=<span class="hl-val">"#icon-home"</span><span class="hl-tag">&gt;&lt;/use&gt;&lt;/svg&gt;</span></pre>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ SECTION 6 ═══════════════════════════════ -->
+  <section class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>CSS Selectors</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <p>Selectors are CSS's targeting system. Master them to write efficient, maintainable styles.</p>
+
+    <h3>Selector Specificity</h3>
+    <div class="callout callout-info">
+      <div class="callout-label">ℹ Specificity</div>
+      Specificity is calculated as (inline, IDs, classes/attrs/pseudos, elements). Higher wins. When equal, last declared wins. <strong>!important</strong> overrides all — avoid it.
+    </div>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — specificity examples</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* Specificity: (0,0,0,1) */</span>
+<span class="hl-sel">p</span> { color: gray; }
+
+<span class="hl-com">/* (0,0,1,0) — class selector */</span>
+<span class="hl-sel">.card</span> { color: blue; }
+
+<span class="hl-com">/* (0,0,1,1) */</span>
+<span class="hl-sel">p.intro</span> { color: green; }
+
+<span class="hl-com">/* (0,1,0,0) — ID selector */</span>
+<span class="hl-sel">#hero</span> { color: red; }
+
+<span class="hl-com">/* (1,0,0,0) — inline style beats all */</span>
+style="color: orange"
+
+<span class="hl-com">/* :is() takes highest specificity of its list */</span>
+<span class="hl-sel">:is(#hero, .card, p)</span> { color: purple; }  <span class="hl-com">/* = (0,1,0,0) */</span>
+
+<span class="hl-com">/* :where() has ZERO specificity — great for resets */</span>
+<span class="hl-sel">:where(h1, h2, h3)</span> { margin: 0; }</pre>
+    </div>
+
+    <h3>Complete Selector Reference</h3>
+    <table class="prop-table">
+      <tr><th>Selector</th><th>Matches</th><th>Example</th></tr>
+      <tr><td class="prop-name">*</td><td class="prop-desc">Everything</td><td class="prop-vals">* { box-sizing: border-box }</td></tr>
+      <tr><td class="prop-name">E</td><td class="prop-desc">Element type</td><td class="prop-vals">p, h1, section</td></tr>
+      <tr><td class="prop-name">.class</td><td class="prop-desc">Class attribute</td><td class="prop-vals">.card, .btn-primary</td></tr>
+      <tr><td class="prop-name">#id</td><td class="prop-desc">ID attribute</td><td class="prop-vals">#header, #modal</td></tr>
+      <tr><td class="prop-name">A B</td><td class="prop-desc">B inside A (any depth)</td><td class="prop-vals">.card p</td></tr>
+      <tr><td class="prop-name">A &gt; B</td><td class="prop-desc">B direct child of A</td><td class="prop-vals">ul &gt; li</td></tr>
+      <tr><td class="prop-name">A + B</td><td class="prop-desc">B immediately after A</td><td class="prop-vals">h2 + p</td></tr>
+      <tr><td class="prop-name">A ~ B</td><td class="prop-desc">B sibling(s) after A</td><td class="prop-vals">h2 ~ p</td></tr>
+      <tr><td class="prop-name">[attr]</td><td class="prop-desc">Has attribute</td><td class="prop-vals">[disabled]</td></tr>
+      <tr><td class="prop-name">[attr="val"]</td><td class="prop-desc">Exact value</td><td class="prop-vals">[type="checkbox"]</td></tr>
+      <tr><td class="prop-name">[attr^="v"]</td><td class="prop-desc">Starts with</td><td class="prop-vals">[href^="https"]</td></tr>
+      <tr><td class="prop-name">[attr$="v"]</td><td class="prop-desc">Ends with</td><td class="prop-vals">[href$=".pdf"]</td></tr>
+      <tr><td class="prop-name">[attr*="v"]</td><td class="prop-desc">Contains</td><td class="prop-vals">[class*="btn"]</td></tr>
+      <tr><td class="prop-name">:hover / :focus</td><td class="prop-desc">Mouse over / keyboard focus</td><td class="prop-vals">a:hover</td></tr>
+      <tr><td class="prop-name">:nth-child(n)</td><td class="prop-desc">nth child (1-indexed)</td><td class="prop-vals">li:nth-child(odd)</td></tr>
+      <tr><td class="prop-name">:nth-of-type(n)</td><td class="prop-desc">nth of its type</td><td class="prop-vals">p:nth-of-type(2)</td></tr>
+      <tr><td class="prop-name">:first-child / :last-child</td><td class="prop-desc">First/last child</td><td class="prop-vals">li:last-child</td></tr>
+      <tr><td class="prop-name">:not(selector)</td><td class="prop-desc">Doesn't match selector</td><td class="prop-vals">input:not([type="hidden"])</td></tr>
+      <tr><td class="prop-name">:has(selector)</td><td class="prop-desc">Contains matching descendant</td><td class="prop-vals">.card:has(img)</td></tr>
+      <tr><td class="prop-name">::before / ::after</td><td class="prop-desc">Generated content pseudo-elements</td><td class="prop-vals">.btn::after</td></tr>
+      <tr><td class="prop-name">::placeholder</td><td class="prop-desc">Input placeholder text</td><td class="prop-vals">input::placeholder</td></tr>
+      <tr><td class="prop-name">::selection</td><td class="prop-desc">User-selected text</td><td class="prop-vals">::selection</td></tr>
+    </table>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 6.1 <span class="difficulty diff-medium">Medium</span></div>
+      <div class="box-meta">Topic: Selector Mastery</div>
+      <ol class="box-steps">
+        <li>Style all external links (href starts with http) with an arrow indicator using <code>::after</code>.</li>
+        <li>Use <code>:nth-child</code> to create zebra-striped table rows without classes.</li>
+        <li>Use <code>:has()</code> to style a <code>.form-group</code> differently when its input is invalid.</li>
+        <li>Calculate specificity for 5 selectors of your choice — verify with browser DevTools.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 7 ═══════════════════════════════ -->
+  <section class="section" id="s7">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Box Model &amp; Display</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <h3>The Box Model</h3>
+    <p>Every element is a rectangular box composed of: <strong>content → padding → border → margin</strong>.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* Always set this — sanest box model */</span>
+*, *::before, *::after {
+  <span class="hl-prop">box-sizing</span>: <span class="hl-val">border-box</span>;  <span class="hl-com">/* padding/border included in width */</span>
+}
+
+<span class="hl-sel">.box</span> {
+  <span class="hl-prop">width</span>:   <span class="hl-num">300px</span>;
+  <span class="hl-prop">height</span>:  <span class="hl-num">200px</span>;
+  <span class="hl-prop">padding</span>: <span class="hl-num">20px</span> <span class="hl-num">24px</span>;   <span class="hl-com">/* top/bottom left/right */</span>
+  <span class="hl-prop">border</span>:  <span class="hl-num">2px</span> solid <span class="hl-val">#333</span>;
+  <span class="hl-prop">margin</span>:  <span class="hl-num">16px</span> auto;    <span class="hl-com">/* auto = center horizontally */</span>
+
+  <span class="hl-com">/* Border radius */</span>
+  <span class="hl-prop">border-radius</span>: <span class="hl-num">12px</span>;
+  <span class="hl-prop">border-radius</span>: <span class="hl-num">50%</span>;          <span class="hl-com">/* Full circle */</span>
+  <span class="hl-prop">border-radius</span>: <span class="hl-num">8px</span> <span class="hl-num">0</span> <span class="hl-num">8px</span> <span class="hl-num">0</span>; <span class="hl-com">/* TL TR BR BL */</span>
+
+  <span class="hl-com">/* Outline — doesn't affect layout (good for focus) */</span>
+  <span class="hl-prop">outline</span>: <span class="hl-num">2px</span> solid <span class="hl-val">blue</span>;
+  <span class="hl-prop">outline-offset</span>: <span class="hl-num">4px</span>;
+
+  <span class="hl-com">/* Box shadow */</span>
+  <span class="hl-prop">box-shadow</span>: <span class="hl-num">0</span> <span class="hl-num">4px</span> <span class="hl-num">20px</span> rgba(<span class="hl-num">0</span>,<span class="hl-num">0</span>,<span class="hl-num">0</span>,<span class="hl-num">0.15</span>);
+  <span class="hl-prop">box-shadow</span>: inset <span class="hl-num">0</span> <span class="hl-num">2px</span> <span class="hl-num">4px</span> rgba(<span class="hl-num">0</span>,<span class="hl-num">0</span>,<span class="hl-num">0</span>,<span class="hl-num">0.2</span>); <span class="hl-com">/* Inset */</span>
+}</pre>
+    </div>
+
+    <h3>Display Values</h3>
+    <table class="prop-table">
+      <tr><th>Value</th><th>Behavior</th><th>Typical Use</th></tr>
+      <tr><td class="prop-name">block</td><td class="prop-desc">Full width, new line before/after, respects all box model properties</td><td class="prop-desc">div, p, h1–h6, section</td></tr>
+      <tr><td class="prop-name">inline</td><td class="prop-desc">Flows with text, width/height ignored</td><td class="prop-desc">span, a, em, strong</td></tr>
+      <tr><td class="prop-name">inline-block</td><td class="prop-desc">Inline + respects width/height/padding</td><td class="prop-desc">Buttons, badges</td></tr>
+      <tr><td class="prop-name">flex</td><td class="prop-desc">Block-level flex container</td><td class="prop-desc">Row/column layouts</td></tr>
+      <tr><td class="prop-name">inline-flex</td><td class="prop-desc">Inline flex container</td><td class="prop-desc">Inline button groups</td></tr>
+      <tr><td class="prop-name">grid</td><td class="prop-desc">Block-level grid container</td><td class="prop-desc">Page layouts</td></tr>
+      <tr><td class="prop-name">none</td><td class="prop-desc">Removed from layout entirely</td><td class="prop-desc">Hiding elements</td></tr>
+      <tr><td class="prop-name">contents</td><td class="prop-desc">Element itself disappears, children remain</td><td class="prop-desc">Semantic wrappers</td></tr>
+      <tr><td class="prop-name">table / table-cell</td><td class="prop-desc">Behave like table elements</td><td class="prop-desc">Rare edge cases</td></tr>
+    </table>
+
+    <div class="callout callout-warn">
+      <div class="callout-label">⚠ Margin Collapse</div>
+      Vertical margins between block elements collapse to the largest value. Padding, flex, or grid parents prevent this. Horizontal margins never collapse.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 8 ═══════════════════════════════ -->
+  <section class="section" id="s8">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Typography</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — typography system</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-sel">body</span> {
+  <span class="hl-prop">font-family</span>: <span class="hl-val">'Inter'</span>, system-ui, -apple-system, sans-serif;
+  <span class="hl-prop">font-size</span>:   <span class="hl-num">16px</span>;           <span class="hl-com">/* Browser default = 16px */</span>
+  <span class="hl-prop">line-height</span>: <span class="hl-num">1.6</span>;           <span class="hl-com">/* Unitless — relative to font-size */</span>
+  <span class="hl-prop">font-weight</span>: <span class="hl-num">400</span>;           <span class="hl-com">/* 100–900 */</span>
+  <span class="hl-prop">color</span>: <span class="hl-val">#1a1a1a</span>;
+}
+
+<span class="hl-com">/* Type scale using rem */</span>
+<span class="hl-sel">h1</span> { <span class="hl-prop">font-size</span>: <span class="hl-num">2.5rem</span>;  }   <span class="hl-com">/* 40px */</span>
+<span class="hl-sel">h2</span> { <span class="hl-prop">font-size</span>: <span class="hl-num">2rem</span>;    }   <span class="hl-com">/* 32px */</span>
+<span class="hl-sel">h3</span> { <span class="hl-prop">font-size</span>: <span class="hl-num">1.5rem</span>;  }   <span class="hl-com">/* 24px */</span>
+<span class="hl-sel">h4</span> { <span class="hl-prop">font-size</span>: <span class="hl-num">1.25rem</span>; }   <span class="hl-com">/* 20px */</span>
+
+<span class="hl-com">/* Fluid typography with clamp() */</span>
+<span class="hl-sel">h1</span> {
+  <span class="hl-prop">font-size</span>: clamp(<span class="hl-num">1.8rem</span>, <span class="hl-num">4vw</span>, <span class="hl-num">3.5rem</span>);
+  <span class="hl-com">/*         min      ideal   max   */</span>
+}
+
+<span class="hl-com">/* Text properties */</span>
+<span class="hl-sel">.text-styles</span> {
+  <span class="hl-prop">letter-spacing</span>:  <span class="hl-num">0.05em</span>;
+  <span class="hl-prop">word-spacing</span>:    <span class="hl-num">0.1em</span>;
+  <span class="hl-prop">text-transform</span>:  uppercase | lowercase | capitalize;
+  <span class="hl-prop">text-decoration</span>: underline | line-through | none;
+  <span class="hl-prop">text-align</span>:      left | center | right | justify;
+  <span class="hl-prop">text-indent</span>:     <span class="hl-num">2em</span>;
+  <span class="hl-prop">white-space</span>:     nowrap | pre | pre-wrap | pre-line;
+  <span class="hl-prop">word-break</span>:      break-word | break-all;
+  <span class="hl-prop">overflow-wrap</span>:   anywhere;
+  <span class="hl-prop">hyphens</span>:         auto;
+}
+
+<span class="hl-com">/* Truncate to one line */</span>
+<span class="hl-sel">.truncate</span> {
+  <span class="hl-prop">overflow</span>: hidden;
+  <span class="hl-prop">text-overflow</span>: ellipsis;
+  <span class="hl-prop">white-space</span>: nowrap;
+}
+
+<span class="hl-com">/* Clamp to N lines */</span>
+<span class="hl-sel">.clamp-3</span> {
+  <span class="hl-prop">display</span>: -webkit-box;
+  <span class="hl-prop">-webkit-line-clamp</span>: <span class="hl-num">3</span>;
+  <span class="hl-prop">-webkit-box-orient</span>: vertical;
+  <span class="hl-prop">overflow</span>: hidden;
+}
+
+<span class="hl-com">/* Variable fonts */</span>
+<span class="hl-sel">.variable-font</span> {
+  <span class="hl-prop">font-variation-settings</span>: <span class="hl-val">'wght'</span> <span class="hl-num">600</span>, <span class="hl-val">'wdth'</span> <span class="hl-num">75</span>;
+}</pre>
+    </div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 8.1 <span class="difficulty diff-easy">Easy</span></div>
+      <div class="box-meta">Topic: Type System</div>
+      <ol class="box-steps">
+        <li>Build a typographic scale using CSS custom properties: --text-xs through --text-5xl.</li>
+        <li>Implement fluid headings with <code>clamp()</code> for all h1–h4.</li>
+        <li>Create a blog article layout with comfortable line-length (~65ch) and line-height.</li>
+        <li>Style a card component with truncated title (1 line) and clamped description (3 lines).</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 9 ═══════════════════════════════ -->
+  <section class="section" id="s9">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Colors &amp; Backgrounds</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — color formats</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* All ways to express color */</span>
+<span class="hl-sel">.color-examples</span> {
+  <span class="hl-prop">color</span>: <span class="hl-val">red</span>;                       <span class="hl-com">/* Named */</span>
+  <span class="hl-prop">color</span>: <span class="hl-val">#ff0000</span>;                   <span class="hl-com">/* Hex */</span>
+  <span class="hl-prop">color</span>: <span class="hl-val">#f00</span>;                      <span class="hl-com">/* Hex shorthand */</span>
+  <span class="hl-prop">color</span>: rgb(<span class="hl-num">255</span>, <span class="hl-num">0</span>, <span class="hl-num">0</span>);            <span class="hl-com">/* RGB */</span>
+  <span class="hl-prop">color</span>: rgba(<span class="hl-num">255</span>, <span class="hl-num">0</span>, <span class="hl-num">0</span>, <span class="hl-num">0.5</span>);      <span class="hl-com">/* RGBA with alpha */</span>
+  <span class="hl-prop">color</span>: rgb(<span class="hl-num">255</span> <span class="hl-num">0</span> <span class="hl-num">0</span> / <span class="hl-num">50%</span>);        <span class="hl-com">/* Modern RGB syntax */</span>
+  <span class="hl-prop">color</span>: hsl(<span class="hl-num">0</span>deg <span class="hl-num">100%</span> <span class="hl-num">50%</span>);        <span class="hl-com">/* HSL (hue saturation lightness) */</span>
+  <span class="hl-prop">color</span>: hsl(<span class="hl-num">0</span>deg <span class="hl-num">100%</span> <span class="hl-num">50%</span> / <span class="hl-num">0.7</span>); <span class="hl-com">/* HSL with alpha */</span>
+  <span class="hl-prop">color</span>: oklch(<span class="hl-num">60%</span> <span class="hl-num">0.2</span> <span class="hl-num">30</span>);          <span class="hl-com">/* Modern: perceptually uniform */</span>
+  <span class="hl-prop">color</span>: currentColor;               <span class="hl-com">/* Inherits from parent color */</span>
+  <span class="hl-prop">color</span>: transparent;
+}
+
+<span class="hl-com">/* Backgrounds */</span>
+<span class="hl-sel">.bg-examples</span> {
+  <span class="hl-prop">background-color</span>: <span class="hl-val">#f5f5f5</span>;
+
+  <span class="hl-com">/* Linear gradient */</span>
+  <span class="hl-prop">background</span>: linear-gradient(<span class="hl-num">135deg</span>, <span class="hl-val">#667eea</span>, <span class="hl-val">#764ba2</span>);
+
+  <span class="hl-com">/* Radial gradient */</span>
+  <span class="hl-prop">background</span>: radial-gradient(circle at <span class="hl-num">30%</span> <span class="hl-num">50%</span>, <span class="hl-val">#4f9eff</span>, <span class="hl-val">#0a0d14</span>);
+
+  <span class="hl-com">/* Conic gradient */</span>
+  <span class="hl-prop">background</span>: conic-gradient(from <span class="hl-num">0deg</span>, red, yellow, green, red);
+
+  <span class="hl-com">/* Multiple backgrounds (first is on top) */</span>
+  <span class="hl-prop">background</span>:
+    url(<span class="hl-val">overlay.png</span>) no-repeat center,
+    linear-gradient(<span class="hl-val">#000</span>, <span class="hl-val">#333</span>);
+
+  <span class="hl-com">/* Image properties */</span>
+  <span class="hl-prop">background-size</span>:     cover | contain | <span class="hl-num">300px</span> | <span class="hl-num">50%</span>;
+  <span class="hl-prop">background-position</span>: center | top right | <span class="hl-num">50%</span> <span class="hl-num">50%</span>;
+  <span class="hl-prop">background-repeat</span>:   no-repeat | repeat-x | repeat-y;
+  <span class="hl-prop">background-attachment</span>: fixed | scroll | local;  <span class="hl-com">/* Parallax! */</span>
+  <span class="hl-prop">background-clip</span>:     border-box | padding-box | text;
+}</pre>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 10 ═══════════════════════════════ -->
+  <section class="section" id="s10">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>Spacing &amp; Sizing Units</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <table class="prop-table">
+      <tr><th>Unit</th><th>Relative to</th><th>Best used for</th></tr>
+      <tr><td class="prop-name">px</td><td class="prop-desc">Screen pixel</td><td class="prop-desc">Borders, shadows, fine-tuned details</td></tr>
+      <tr><td class="prop-name">rem</td><td class="prop-desc">Root font-size (16px)</td><td class="prop-desc">Typography, consistent spacing</td></tr>
+      <tr><td class="prop-name">em</td><td class="prop-desc">Current element font-size</td><td class="prop-desc">Padding/margins that scale with text</td></tr>
+      <tr><td class="prop-name">%</td><td class="prop-desc">Parent element</td><td class="prop-desc">Fluid widths, responsive layouts</td></tr>
+      <tr><td class="prop-name">vw / vh</td><td class="prop-desc">Viewport width/height</td><td class="prop-desc">Full-screen sections, fluid type</td></tr>
+      <tr><td class="prop-name">vmin / vmax</td><td class="prop-desc">Smaller/larger viewport dimension</td><td class="prop-desc">Responsive icons, squares</td></tr>
+      <tr><td class="prop-name">dvh / svh / lvh</td><td class="prop-desc">Dynamic/small/large viewport height</td><td class="prop-desc">Mobile browser chrome fix</td></tr>
+      <tr><td class="prop-name">ch</td><td class="prop-desc">Width of "0" character</td><td class="prop-desc">Text column width (~65ch optimal)</td></tr>
+      <tr><td class="prop-name">fr</td><td class="prop-desc">Fraction of free space (Grid only)</td><td class="prop-desc">Grid column/row sizing</td></tr>
+      <tr><td class="prop-name">min-content</td><td class="prop-desc">Smallest content can be</td><td class="prop-desc">Grid/flex intrinsic sizing</td></tr>
+      <tr><td class="prop-name">max-content</td><td class="prop-desc">Largest content naturally is</td><td class="prop-desc">Grid/flex intrinsic sizing</td></tr>
+      <tr><td class="prop-name">fit-content</td><td class="prop-desc">Shrinks but not below min-content</td><td class="prop-desc">Buttons, inline blocks</td></tr>
+    </table>
+
+    <h3>Logical Properties (Modern Approach)</h3>
+    <div class="callout callout-tip">
+      <div class="callout-label">💡 Use Logical Properties</div>
+      Logical properties adapt to writing direction (RTL, vertical text). Use them for international apps.
+    </div>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — logical properties</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-sel">.logical</span> {
+  <span class="hl-com">/* Physical → Logical */</span>
+  <span class="hl-prop">margin-top</span>    → <span class="hl-prop">margin-block-start</span>;
+  <span class="hl-prop">margin-bottom</span> → <span class="hl-prop">margin-block-end</span>;
+  <span class="hl-prop">margin-left</span>   → <span class="hl-prop">margin-inline-start</span>;
+  <span class="hl-prop">margin-right</span>  → <span class="hl-prop">margin-inline-end</span>;
+
+  <span class="hl-com">/* Shorthand */</span>
+  <span class="hl-prop">margin-block</span>:  <span class="hl-num">16px</span>;        <span class="hl-com">/* top + bottom */</span>
+  <span class="hl-prop">margin-inline</span>: <span class="hl-num">24px</span>;        <span class="hl-com">/* left + right */</span>
+
+  <span class="hl-prop">width</span>  → <span class="hl-prop">inline-size</span>;
+  <span class="hl-prop">height</span> → <span class="hl-prop">block-size</span>;
+}</pre>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ SECTION 11 ═══════════════════════════════ -->
+  <section class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Flexbox</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <p>Flexbox is a <strong>one-dimensional</strong> layout system. Use it for rows or columns, navigation bars, button groups, centering, and card rows.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — flexbox complete</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* ─── CONTAINER ─── */</span>
+<span class="hl-sel">.flex-container</span> {
+  <span class="hl-prop">display</span>:         flex;
+  <span class="hl-prop">flex-direction</span>:  row | row-reverse | column | column-reverse;
+  <span class="hl-prop">flex-wrap</span>:       nowrap | wrap | wrap-reverse;
+  <span class="hl-prop">flex-flow</span>:       row wrap;          <span class="hl-com">/* Shorthand */</span>
+  <span class="hl-prop">gap</span>:             <span class="hl-num">16px</span>;              <span class="hl-com">/* Space between items */</span>
+  <span class="hl-prop">column-gap</span>:      <span class="hl-num">20px</span>;
+  <span class="hl-prop">row-gap</span>:         <span class="hl-num">12px</span>;
+
+  <span class="hl-com">/* Alignment on main axis (row = horizontal) */</span>
+  <span class="hl-prop">justify-content</span>: flex-start | flex-end | center
+                 | space-between | space-around | space-evenly;
+
+  <span class="hl-com">/* Alignment on cross axis (row = vertical) */</span>
+  <span class="hl-prop">align-items</span>:     stretch | flex-start | flex-end
+                 | center | baseline;
+
+  <span class="hl-com">/* Multi-line cross-axis alignment */</span>
+  <span class="hl-prop">align-content</span>:   flex-start | flex-end | center
+                 | space-between | space-around | stretch;
+}
+
+<span class="hl-com">/* ─── ITEMS ─── */</span>
+<span class="hl-sel">.flex-item</span> {
+  <span class="hl-prop">flex-grow</span>:   <span class="hl-num">1</span>;       <span class="hl-com">/* Grow to fill space (0 = don't grow) */</span>
+  <span class="hl-prop">flex-shrink</span>: <span class="hl-num">0</span>;       <span class="hl-com">/* Don't shrink below basis (1 = shrink) */</span>
+  <span class="hl-prop">flex-basis</span>:  <span class="hl-num">200px</span>;   <span class="hl-com">/* Starting size before grow/shrink */</span>
+  <span class="hl-prop">flex</span>:        <span class="hl-num">1</span> <span class="hl-num">1</span> auto; <span class="hl-com">/* Shorthand: grow shrink basis */</span>
+  <span class="hl-prop">flex</span>:        <span class="hl-num">1</span>;        <span class="hl-com">/* = 1 1 0 */</span>
+  <span class="hl-prop">flex</span>:        auto;     <span class="hl-com">/* = 1 1 auto */</span>
+  <span class="hl-prop">flex</span>:        none;     <span class="hl-com">/* = 0 0 auto (rigid) */</span>
+
+  <span class="hl-prop">order</span>:       <span class="hl-num">2</span>;         <span class="hl-com">/* Reorder visually (default 0) */</span>
+  <span class="hl-prop">align-self</span>:  center;   <span class="hl-com">/* Override container align-items */</span>
+}
+
+<span class="hl-com">/* ─── COMMON PATTERNS ─── */</span>
+<span class="hl-com">/* Perfect centering */</span>
+<span class="hl-sel">.center</span> { display: flex; place-items: center; }
+
+<span class="hl-com">/* Push last item to end */</span>
+<span class="hl-sel">.nav</span> { display: flex; }
+<span class="hl-sel">.nav .logo</span> { margin-inline-end: auto; }
+
+<span class="hl-com">/* Equal-width columns */</span>
+<span class="hl-sel">.cols > *</span> { flex: 1; }</pre>
+    </div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 11.1 <span class="difficulty diff-medium">Medium</span></div>
+      <div class="box-meta">Topic: Flexbox Layouts</div>
+      <ol class="box-steps">
+        <li>Build a navbar: logo on left, nav links in center, CTA button on right — using only flexbox.</li>
+        <li>Create a card grid where cards are equal height regardless of content length.</li>
+        <li>Build a sidebar + main content layout using flexbox (sidebar fixed width, content grows).</li>
+        <li>Create a "holy grail" layout: header, footer, left sidebar, right sidebar, main content — pure flexbox.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 12 ═══════════════════════════════ -->
+  <section class="section" id="s12">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <h2>CSS Grid</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <p>Grid is <strong>two-dimensional</strong>. Use it for page-level layouts, dashboard grids, magazine-style designs, and any time you need both rows AND columns simultaneously.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — grid complete</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* ─── CONTAINER ─── */</span>
+<span class="hl-sel">.grid</span> {
+  <span class="hl-prop">display</span>: grid;
+
+  <span class="hl-com">/* Explicit columns */</span>
+  <span class="hl-prop">grid-template-columns</span>: <span class="hl-num">200px</span> <span class="hl-num">1fr</span> <span class="hl-num">2fr</span>;
+  <span class="hl-prop">grid-template-columns</span>: repeat(<span class="hl-num">4</span>, <span class="hl-num">1fr</span>);
+  <span class="hl-prop">grid-template-columns</span>: repeat(auto-fill, minmax(<span class="hl-num">250px</span>, <span class="hl-num">1fr</span>));
+
+  <span class="hl-com">/* Explicit rows */</span>
+  <span class="hl-prop">grid-template-rows</span>: auto <span class="hl-num">1fr</span> auto;
+
+  <span class="hl-com">/* Named areas */</span>
+  <span class="hl-prop">grid-template-areas</span>:
+    <span class="hl-val">"header header header"</span>
+    <span class="hl-val">"sidebar main aside"</span>
+    <span class="hl-val">"footer footer footer"</span>;
+
+  <span class="hl-prop">gap</span>: <span class="hl-num">20px</span> <span class="hl-num">16px</span>;      <span class="hl-com">/* row-gap column-gap */</span>
+
+  <span class="hl-com">/* Implicit rows (auto-generated) */</span>
+  <span class="hl-prop">grid-auto-rows</span>:    minmax(<span class="hl-num">100px</span>, auto);
+  <span class="hl-prop">grid-auto-columns</span>: <span class="hl-num">200px</span>;
+  <span class="hl-prop">grid-auto-flow</span>:    row | column | dense;
+
+  <span class="hl-com">/* Alignment */</span>
+  <span class="hl-prop">justify-items</span>:   start | end | center | stretch;
+  <span class="hl-prop">align-items</span>:     start | end | center | stretch;
+  <span class="hl-prop">place-items</span>:     center;   <span class="hl-com">/* Shorthand for both */</span>
+  <span class="hl-prop">justify-content</span>: start | end | center | space-between | space-around;
+  <span class="hl-prop">align-content</span>:   start | end | center | space-between;
+}
+
+<span class="hl-com">/* ─── ITEMS ─── */</span>
+<span class="hl-sel">.header</span> { <span class="hl-prop">grid-area</span>: header; }
+<span class="hl-sel">.sidebar</span> { <span class="hl-prop">grid-area</span>: sidebar; }
+<span class="hl-sel">.main</span>    { <span class="hl-prop">grid-area</span>: main; }
+
+<span class="hl-com">/* Manual placement */</span>
+<span class="hl-sel">.feature</span> {
+  <span class="hl-prop">grid-column</span>: <span class="hl-num">1</span> / <span class="hl-num">3</span>;   <span class="hl-com">/* Start line / end line */</span>
+  <span class="hl-prop">grid-column</span>: <span class="hl-num">1</span> / -<span class="hl-num">1</span>;  <span class="hl-com">/* Span full width */</span>
+  <span class="hl-prop">grid-column</span>: span <span class="hl-num">2</span>;   <span class="hl-com">/* Span 2 columns */</span>
+  <span class="hl-prop">grid-row</span>:    <span class="hl-num">1</span> / <span class="hl-num">3</span>;
+  <span class="hl-prop">justify-self</span>: center;
+  <span class="hl-prop">align-self</span>:   end;
+}</pre>
+    </div>
+
+    <h3>auto-fill vs auto-fit</h3>
+    <div class="two-col">
+      <div class="callout callout-info" style="margin:0">
+        <div class="callout-label">auto-fill</div>
+        Creates as many columns as will fit, even if empty. Grid tracks exist even without content. Leaves empty space on the right.
+      </div>
+      <div class="callout callout-good" style="margin:0">
+        <div class="callout-label">auto-fit</div>
+        Same as auto-fill but collapses empty tracks. Items stretch to fill the full width. Usually what you want for card grids.
+      </div>
+    </div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 12.1 <span class="difficulty diff-hard">Hard</span></div>
+      <div class="box-meta">Topic: Grid Mastery</div>
+      <ol class="box-steps">
+        <li>Build a magazine-style layout: large featured article spanning 2 columns, 3 smaller articles below, sidebar on right — using named grid areas.</li>
+        <li>Create a responsive image gallery using <code>auto-fit</code> + <code>minmax()</code>. Images should reflow automatically at any screen width.</li>
+        <li>Build a Kanban board (3 columns: Todo, In Progress, Done) with CSS Grid. Each column is a grid with <code>grid-auto-rows</code>.</li>
+        <li>Use <code>grid-auto-flow: dense</code> to fill gaps in an irregular card grid.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 13 ═══════════════════════════════ -->
+  <section class="section" id="s13">
+    <div class="section-header">
+      <span class="section-num">13</span>
+      <h2>Positioning</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — positioning</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* static — default, flows normally */</span>
+<span class="hl-sel">.static</span> { <span class="hl-prop">position</span>: static; }
+
+<span class="hl-com">/* relative — offset FROM its natural position, creates stacking context */</span>
+<span class="hl-sel">.relative</span> {
+  <span class="hl-prop">position</span>: relative;
+  <span class="hl-prop">top</span>: <span class="hl-num">10px</span>; <span class="hl-prop">left</span>: <span class="hl-num">20px</span>;
+}
+
+<span class="hl-com">/* absolute — removed from flow, positioned relative to nearest positioned ancestor */</span>
+<span class="hl-sel">.absolute</span> {
+  <span class="hl-prop">position</span>: absolute;
+  <span class="hl-prop">top</span>: <span class="hl-num">0</span>; <span class="hl-prop">right</span>: <span class="hl-num">0</span>;
+  <span class="hl-prop">inset</span>: <span class="hl-num">0</span>;              <span class="hl-com">/* Shorthand: top right bottom left */</span>
+}
+
+<span class="hl-com">/* fixed — relative to viewport, stays during scroll */</span>
+<span class="hl-sel">.fixed-header</span> {
+  <span class="hl-prop">position</span>: fixed;
+  <span class="hl-prop">top</span>: <span class="hl-num">0</span>; <span class="hl-prop">left</span>: <span class="hl-num">0</span>; <span class="hl-prop">right</span>: <span class="hl-num">0</span>;
+  <span class="hl-prop">z-index</span>: <span class="hl-num">1000</span>;
+}
+
+<span class="hl-com">/* sticky — scrolls with page until threshold, then sticks */</span>
+<span class="hl-sel">.sticky-nav</span> {
+  <span class="hl-prop">position</span>: sticky;
+  <span class="hl-prop">top</span>: <span class="hl-num">0</span>;             <span class="hl-com">/* Required! */</span>
+  <span class="hl-prop">z-index</span>: <span class="hl-num">100</span>;
+}
+
+<span class="hl-com">/* z-index — controls stacking order within same stacking context */</span>
+<span class="hl-sel">.modal-overlay</span> { <span class="hl-prop">z-index</span>: <span class="hl-num">1000</span>; }
+<span class="hl-sel">.modal</span>         { <span class="hl-prop">z-index</span>: <span class="hl-num">1001</span>; }
+<span class="hl-sel">.tooltip</span>       { <span class="hl-prop">z-index</span>: <span class="hl-num">2000</span>; }</pre>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-label">⚠ Stacking Context</div>
+      <code>opacity &lt; 1</code>, <code>transform</code>, <code>filter</code>, <code>will-change</code>, <code>isolation: isolate</code> all create new stacking contexts. This is why your z-index sometimes "doesn't work" — the element is in a different context.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 14 ═══════════════════════════════ -->
+  <section class="section" id="s14">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <h2>Responsive Design</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <h3>Media Queries</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — responsive</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* Mobile-first approach — base styles, then larger screens */</span>
+<span class="hl-sel">.container</span> { <span class="hl-prop">width</span>: <span class="hl-num">100%</span>; <span class="hl-prop">padding</span>: <span class="hl-num">0 16px</span>; }
+
+<span class="hl-kw">@media</span> (min-width: <span class="hl-num">640px</span>)  { <span class="hl-com">/* sm */</span> }
+<span class="hl-kw">@media</span> (min-width: <span class="hl-num">768px</span>)  { <span class="hl-com">/* md */</span> }
+<span class="hl-kw">@media</span> (min-width: <span class="hl-num">1024px</span>) { <span class="hl-com">/* lg */</span> }
+<span class="hl-kw">@media</span> (min-width: <span class="hl-num">1280px</span>) { <span class="hl-com">/* xl */</span> }
+<span class="hl-kw">@media</span> (min-width: <span class="hl-num">1536px</span>) { <span class="hl-com">/* 2xl */</span> }
+
+<span class="hl-com">/* Feature queries */</span>
+<span class="hl-kw">@supports</span> (display: grid) {
+  <span class="hl-sel">.container</span> { <span class="hl-prop">display</span>: grid; }
+}
+
+<span class="hl-com">/* User preferences */</span>
+<span class="hl-kw">@media</span> (prefers-color-scheme: dark) {
+  <span class="hl-sel">:root</span> { <span class="hl-prop">--bg</span>: <span class="hl-val">#0a0a0a</span>; <span class="hl-prop">--text</span>: <span class="hl-val">#fff</span>; }
+}
+<span class="hl-kw">@media</span> (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { <span class="hl-prop">animation-duration</span>: <span class="hl-num">0.01ms</span> !important; }
+}
+<span class="hl-kw">@media</span> (prefers-contrast: high) {
+  <span class="hl-sel">:root</span> { <span class="hl-prop">--border</span>: <span class="hl-val">#fff</span>; }
+}
+
+<span class="hl-com">/* Container queries (game changer!) */</span>
+<span class="hl-sel">.card-wrapper</span> { <span class="hl-prop">container-type</span>: inline-size; <span class="hl-prop">container-name</span>: card; }
+
+<span class="hl-kw">@container</span> card (min-width: <span class="hl-num">400px</span>) {
+  <span class="hl-sel">.card</span> { <span class="hl-prop">flex-direction</span>: row; }
+}</pre>
+    </div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 14.1 <span class="difficulty diff-medium">Medium</span></div>
+      <div class="box-meta">Topic: Responsive Design</div>
+      <ol class="box-steps">
+        <li>Build a product grid that shows 1 column on mobile, 2 on tablet, 4 on desktop — mobile-first.</li>
+        <li>Implement a hamburger nav that collapses below 768px using only CSS (checkbox hack or :has()).</li>
+        <li>Add a <code>prefers-color-scheme</code> dark mode implementation using CSS custom properties.</li>
+        <li>Use container queries to make a card component adapt based on its parent width, not viewport.</li>
+      </ol>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ SECTION 15 ═══════════════════════════════ -->
+  <section class="section" id="s15">
+    <div class="section-header">
+      <span class="section-num">15</span>
+      <h2>CSS Variables &amp; Cascade</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — custom properties system</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* Define on :root for global access */</span>
+<span class="hl-sel">:root</span> {
+  <span class="hl-com">/* Color system */</span>
+  <span class="hl-prop">--color-primary</span>:    oklch(<span class="hl-num">65%</span> <span class="hl-num">0.18</span> <span class="hl-num">250</span>);
+  <span class="hl-prop">--color-primary-10</span>: oklch(<span class="hl-num">65%</span> <span class="hl-num">0.18</span> <span class="hl-num">250</span> / <span class="hl-num">10%</span>);
+
+  <span class="hl-com">/* Space scale */</span>
+  <span class="hl-prop">--space-1</span>: <span class="hl-num">4px</span>;
+  <span class="hl-prop">--space-2</span>: <span class="hl-num">8px</span>;
+  <span class="hl-prop">--space-4</span>: <span class="hl-num">16px</span>;
+  <span class="hl-prop">--space-8</span>: <span class="hl-num">32px</span>;
+
+  <span class="hl-com">/* Animation */</span>
+  <span class="hl-prop">--ease-out</span>: cubic-bezier(<span class="hl-num">0</span>, <span class="hl-num">0</span>, <span class="hl-num">0.2</span>, <span class="hl-num">1</span>);
+  <span class="hl-prop">--duration-fast</span>:   <span class="hl-num">150ms</span>;
+  <span class="hl-prop">--duration-normal</span>: <span class="hl-num">300ms</span>;
+}
+
+<span class="hl-com">/* Use a variable */</span>
+<span class="hl-sel">.btn</span> {
+  <span class="hl-prop">background</span>: var(<span class="hl-prop">--color-primary</span>);
+  <span class="hl-prop">padding</span>: var(<span class="hl-prop">--space-2</span>) var(<span class="hl-prop">--space-4</span>);
+
+  <span class="hl-com">/* Fallback value */</span>
+  <span class="hl-prop">color</span>: var(<span class="hl-prop">--text-color</span>, white);
+}
+
+<span class="hl-com">/* Scoped variables (override per component) */</span>
+<span class="hl-sel">.theme-dark</span> {
+  <span class="hl-prop">--color-primary</span>: oklch(<span class="hl-num">70%</span> <span class="hl-num">0.2</span> <span class="hl-num">250</span>);
+}
+
+<span class="hl-com">/* Computed with calc() */</span>
+<span class="hl-sel">.responsive-pad</span> {
+  <span class="hl-prop">--base</span>: <span class="hl-num">16px</span>;
+  <span class="hl-prop">padding</span>: calc(var(<span class="hl-prop">--base</span>) * <span class="hl-num">2</span>);
+}
+
+<span class="hl-com">/* CSS Layers — explicit cascade control */</span>
+<span class="hl-kw">@layer</span> reset, base, components, utilities;
+
+<span class="hl-kw">@layer</span> reset {
+  * { margin: <span class="hl-num">0</span>; padding: <span class="hl-num">0</span>; }
+}
+<span class="hl-kw">@layer</span> components {
+  <span class="hl-sel">.btn</span> { <span class="hl-prop">padding</span>: <span class="hl-num">8px 16px</span>; }
+}
+<span class="hl-kw">@layer</span> utilities {
+  <span class="hl-sel">.mt-4</span> { <span class="hl-prop">margin-top</span>: <span class="hl-num">16px</span> !important; } <span class="hl-com">/* OK in utilities layer */</span>
+}</pre>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 16 ═══════════════════════════════ -->
+  <section class="section" id="s16">
+    <div class="section-header">
+      <span class="section-num">16</span>
+      <h2>Transforms &amp; Transitions</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — transforms</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* 2D Transforms */</span>
+<span class="hl-sel">.transform-2d</span> {
+  <span class="hl-prop">transform</span>: translateX(<span class="hl-num">50px</span>);
+  <span class="hl-prop">transform</span>: translateY(-<span class="hl-num">20%</span>);
+  <span class="hl-prop">transform</span>: translate(<span class="hl-num">50px</span>, <span class="hl-num">20px</span>);
+  <span class="hl-prop">transform</span>: scale(<span class="hl-num">1.5</span>);
+  <span class="hl-prop">transform</span>: scaleX(<span class="hl-num">0.5</span>);
+  <span class="hl-prop">transform</span>: rotate(<span class="hl-num">45deg</span>);
+  <span class="hl-prop">transform</span>: skew(<span class="hl-num">10deg</span>, <span class="hl-num">5deg</span>);
+  <span class="hl-com">/* Chain multiple transforms */</span>
+  <span class="hl-prop">transform</span>: rotate(<span class="hl-num">45deg</span>) scale(<span class="hl-num">1.2</span>) translateX(<span class="hl-num">10px</span>);
+
+  <span class="hl-com">/* Transform origin */</span>
+  <span class="hl-prop">transform-origin</span>: top left | center | <span class="hl-num">50%</span> <span class="hl-num">50%</span>;
+}
+
+<span class="hl-com">/* 3D Transforms */</span>
+<span class="hl-sel">.parent-3d</span> { <span class="hl-prop">perspective</span>: <span class="hl-num">1000px</span>; } <span class="hl-com">/* Required on parent */</span>
+<span class="hl-sel">.card-3d</span>   {
+  <span class="hl-prop">transform-style</span>: preserve-3d;
+  <span class="hl-prop">transform</span>: rotateY(<span class="hl-num">30deg</span>) rotateX(<span class="hl-num">15deg</span>);
+  <span class="hl-prop">backface-visibility</span>: hidden; <span class="hl-com">/* For flip animations */</span>
+}
+
+<span class="hl-com">/* Individual transform properties (modern — compositable!) */</span>
+<span class="hl-sel">.compositable</span> {
+  <span class="hl-prop">translate</span>: <span class="hl-num">50px</span> <span class="hl-num">20px</span>;
+  <span class="hl-prop">rotate</span>:    <span class="hl-num">45deg</span>;
+  <span class="hl-prop">scale</span>:     <span class="hl-num">1.5</span>;
+}
+
+<span class="hl-com">/* Transitions */</span>
+<span class="hl-sel">.smooth</span> {
+  <span class="hl-prop">transition</span>: all <span class="hl-num">300ms</span> ease;        <span class="hl-com">/* Avoid "all" in production */</span>
+  <span class="hl-prop">transition</span>: transform <span class="hl-num">250ms</span> cubic-bezier(<span class="hl-num">0.34</span>, <span class="hl-num">1.56</span>, <span class="hl-num">0.64</span>, <span class="hl-num">1</span>),  <span class="hl-com">/* Spring */</span>
+              opacity <span class="hl-num">200ms</span> ease,
+              background-color <span class="hl-num">150ms</span> ease;
+  <span class="hl-prop">transition-delay</span>: <span class="hl-num">100ms</span>;
+}
+<span class="hl-sel">.smooth:hover</span> {
+  <span class="hl-prop">transform</span>: translateY(-<span class="hl-num">4px</span>) scale(<span class="hl-num">1.02</span>);
+}
+
+<span class="hl-com">/* Only animate compositor-friendly properties for 60fps */</span>
+<span class="hl-com">/* ✅ opacity, transform, filter (GPU-accelerated) */</span>
+<span class="hl-com">/* ❌ width, height, margin, top, left (causes layout reflow) */</span></pre>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 17 ═══════════════════════════════ -->
+  <section class="section" id="s17">
+    <div class="section-header">
+      <span class="section-num">17</span>
+      <h2>Animations &amp; Keyframes</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — keyframe animations</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* Define keyframes */</span>
+<span class="hl-kw">@keyframes</span> fadeSlideIn {
+  from {
+    <span class="hl-prop">opacity</span>: <span class="hl-num">0</span>;
+    <span class="hl-prop">transform</span>: translateY(<span class="hl-num">20px</span>);
+  }
+  to {
+    <span class="hl-prop">opacity</span>: <span class="hl-num">1</span>;
+    <span class="hl-prop">transform</span>: translateY(<span class="hl-num">0</span>);
+  }
+}
+
+<span class="hl-kw">@keyframes</span> pulse {
+  <span class="hl-num">0%</span>, <span class="hl-num">100%</span> { <span class="hl-prop">transform</span>: scale(<span class="hl-num">1</span>); }
+  <span class="hl-num">50%</span>       { <span class="hl-prop">transform</span>: scale(<span class="hl-num">1.05</span>); }
+}
+
+<span class="hl-kw">@keyframes</span> spin {
+  to { <span class="hl-prop">transform</span>: rotate(<span class="hl-num">360deg</span>); }
+}
+
+<span class="hl-com">/* Apply animation */</span>
+<span class="hl-sel">.animated</span> {
+  <span class="hl-prop">animation-name</span>:            fadeSlideIn;
+  <span class="hl-prop">animation-duration</span>:        <span class="hl-num">400ms</span>;
+  <span class="hl-prop">animation-timing-function</span>: ease-out;
+  <span class="hl-prop">animation-delay</span>:           <span class="hl-num">100ms</span>;
+  <span class="hl-prop">animation-iteration-count</span>: <span class="hl-num">1</span> | infinite;
+  <span class="hl-prop">animation-direction</span>:       normal | reverse | alternate | alternate-reverse;
+  <span class="hl-prop">animation-fill-mode</span>:       both; <span class="hl-com">/* Retain final state */</span>
+  <span class="hl-prop">animation-play-state</span>:      running | paused;
+
+  <span class="hl-com">/* Shorthand */</span>
+  <span class="hl-prop">animation</span>: fadeSlideIn <span class="hl-num">400ms</span> ease-out <span class="hl-num">100ms</span> both;
+}
+
+<span class="hl-com">/* Staggered animations with delay */</span>
+<span class="hl-sel">.list-item:nth-child(1)</span> { <span class="hl-prop">animation-delay</span>: <span class="hl-num">0ms</span>;   }
+<span class="hl-sel">.list-item:nth-child(2)</span> { <span class="hl-prop">animation-delay</span>: <span class="hl-num">80ms</span>;  }
+<span class="hl-sel">.list-item:nth-child(3)</span> { <span class="hl-prop">animation-delay</span>: <span class="hl-num">160ms</span>; }
+
+<span class="hl-com">/* View Transitions API (native page transitions!) */</span>
+<span class="hl-kw">@view-transition</span> { navigation: auto; }
+<span class="hl-sel">::view-transition-old(root)</span> { <span class="hl-prop">animation</span>: slideOut <span class="hl-num">300ms</span> ease; }
+<span class="hl-sel">::view-transition-new(root)</span> { <span class="hl-prop">animation</span>: slideIn  <span class="hl-num">300ms</span> ease; }</pre>
+    </div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 17.1 <span class="difficulty diff-medium">Medium</span></div>
+      <div class="box-meta">Topic: CSS Animations</div>
+      <ol class="box-steps">
+        <li>Create a loading spinner using <code>@keyframes</code> and <code>border</code> + <code>rotate</code>.</li>
+        <li>Build a skeleton loading screen that pulses — used for content loading states.</li>
+        <li>Animate a card list so items stagger in on page load (delay each by 80ms).</li>
+        <li>Build a CSS-only modal with a fade + scale animation on open/close.</li>
+        <li>Wrap all animations in <code>@media (prefers-reduced-motion: no-preference)</code>.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 18 ═══════════════════════════════ -->
+  <section class="section" id="s18">
+    <div class="section-header">
+      <span class="section-num">18</span>
+      <h2>Pseudo-classes &amp; Pseudo-elements</h2>
+      <span class="tag tag-css">CSS</span>
+    </div>
+
+    <table class="prop-table">
+      <tr><th>Pseudo-class</th><th>When it applies</th></tr>
+      <tr><td class="prop-name">:hover</td><td class="prop-desc">Mouse is over the element</td></tr>
+      <tr><td class="prop-name">:focus</td><td class="prop-desc">Element has keyboard/programmatic focus</td></tr>
+      <tr><td class="prop-name">:focus-visible</td><td class="prop-desc">Focus from keyboard only (not mouse click)</td></tr>
+      <tr><td class="prop-name">:focus-within</td><td class="prop-desc">Element OR any descendant is focused</td></tr>
+      <tr><td class="prop-name">:active</td><td class="prop-desc">Being clicked/pressed</td></tr>
+      <tr><td class="prop-name">:visited</td><td class="prop-desc">Link has been visited (limited styling)</td></tr>
+      <tr><td class="prop-name">:checked</td><td class="prop-desc">Checkbox/radio is selected</td></tr>
+      <tr><td class="prop-name">:disabled / :enabled</td><td class="prop-desc">Form element is disabled/enabled</td></tr>
+      <tr><td class="prop-name">:required / :optional</td><td class="prop-desc">Form input has/lacks required attribute</td></tr>
+      <tr><td class="prop-name">:valid / :invalid</td><td class="prop-desc">Input passes/fails constraint validation</td></tr>
+      <tr><td class="prop-name">:placeholder-shown</td><td class="prop-desc">Placeholder is visible (input is empty)</td></tr>
+      <tr><td class="prop-name">:empty</td><td class="prop-desc">Element has no children</td></tr>
+      <tr><td class="prop-name">:root</td><td class="prop-desc">Top-level element (html)</td></tr>
+      <tr><td class="prop-name">:target</td><td class="prop-desc">Element whose id matches URL hash</td></tr>
+      <tr><td class="prop-name">:is()</td><td class="prop-desc">Matches any of its arguments</td></tr>
+      <tr><td class="prop-name">:where()</td><td class="prop-desc">Same as :is() but zero specificity</td></tr>
+      <tr><td class="prop-name">:has()</td><td class="prop-desc">"Parent" selector — has matching descendant</td></tr>
+      <tr><td class="prop-name">:not()</td><td class="prop-desc">Doesn't match argument</td></tr>
+      <tr><td class="prop-name">:any-link</td><td class="prop-desc">Any anchor with href</td></tr>
+    </table>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — pseudo-elements</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* ::before and ::after — generated content */</span>
+<span class="hl-sel">.icon-link::after</span> {
+  <span class="hl-prop">content</span>: <span class="hl-val">" ↗"</span>;     <span class="hl-com">/* Required (even empty string "") */</span>
+  <span class="hl-prop">display</span>: inline-block;
+}
+
+<span class="hl-com">/* Decorative element */</span>
+<span class="hl-sel">.card::before</span> {
+  <span class="hl-prop">content</span>: <span class="hl-val">""</span>;
+  <span class="hl-prop">position</span>: absolute;
+  <span class="hl-prop">inset</span>: -<span class="hl-num">2px</span>;
+  <span class="hl-prop">background</span>: linear-gradient(<span class="hl-val">#4f9eff</span>, <span class="hl-val">#7c5cfc</span>);
+  <span class="hl-prop">border-radius</span>: inherit;
+  <span class="hl-prop">z-index</span>: -<span class="hl-num">1</span>;          <span class="hl-com">/* Gradient border trick */</span>
+}
+
+<span class="hl-sel">::placeholder</span>  { <span class="hl-prop">color</span>: <span class="hl-val">#666</span>; <span class="hl-prop">font-style</span>: italic; }
+<span class="hl-sel">::selection</span>    { <span class="hl-prop">background</span>: <span class="hl-val">#4f9eff</span>; <span class="hl-prop">color</span>: <span class="hl-val">#fff</span>; }
+<span class="hl-sel">::first-line</span>   { <span class="hl-prop">font-size</span>: <span class="hl-num">1.1em</span>; <span class="hl-prop">font-weight</span>: bold; }
+<span class="hl-sel">::first-letter</span> { <span class="hl-prop">font-size</span>: <span class="hl-num">3em</span>; <span class="hl-prop">float</span>: left; }  <span class="hl-com">/* Drop cap */</span>
+<span class="hl-sel">::marker</span>       { <span class="hl-prop">color</span>: <span class="hl-val">#4f9eff</span>; }               <span class="hl-com">/* List bullet */</span>
+<span class="hl-sel">::backdrop</span>     { <span class="hl-prop">background</span>: rgba(<span class="hl-num">0</span>,<span class="hl-num">0</span>,<span class="hl-num">0</span>,<span class="hl-num">0.5</span>); }  <span class="hl-com">/* &lt;dialog&gt; backdrop */</span></pre>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 19 ═══════════════════════════════ -->
+  <section class="section" id="s19">
+    <div class="section-header">
+      <span class="section-num">19</span>
+      <h2>Modern CSS Features</h2>
+      <span class="tag tag-css">CSS</span>
+      <span class="tag tag-tip">2024–25</span>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — cutting edge</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* ─── CSS NESTING (native) ─── */</span>
+<span class="hl-sel">.card</span> {
+  <span class="hl-prop">background</span>: var(<span class="hl-prop">--surface</span>);
+
+  <span class="hl-sel">&amp; .title</span> { <span class="hl-prop">font-size</span>: <span class="hl-num">1.2rem</span>; }     <span class="hl-com">/* .card .title */</span>
+  <span class="hl-sel">&amp;:hover</span>  { <span class="hl-prop">border-color</span>: blue; }     <span class="hl-com">/* .card:hover */</span>
+
+  <span class="hl-kw">@media</span> (min-width: <span class="hl-num">768px</span>) {           <span class="hl-com">/* Nested media query */</span>
+    <span class="hl-prop">display</span>: flex;
+  }
+}
+
+<span class="hl-com">/* ─── @scope ─── */</span>
+<span class="hl-kw">@scope</span> (<span class="hl-sel">.card</span>) to (<span class="hl-sel">.card .inner</span>) {
+  <span class="hl-sel">p</span> { <span class="hl-prop">color</span>: red; }   <span class="hl-com">/* Only p within .card but outside .inner */</span>
+}
+
+<span class="hl-com">/* ─── SCROLL-DRIVEN ANIMATIONS ─── */</span>
+<span class="hl-sel">.progress-bar</span> {
+  <span class="hl-prop">animation</span>: grow linear;
+  <span class="hl-prop">animation-timeline</span>: scroll();       <span class="hl-com">/* Driven by scroll position */</span>
+  <span class="hl-prop">animation-range</span>: entry <span class="hl-num">0%</span> cover <span class="hl-num">100%</span>;
+}
+<span class="hl-kw">@keyframes</span> grow {
+  from { <span class="hl-prop">transform</span>: scaleX(<span class="hl-num">0</span>); }
+  to   { <span class="hl-prop">transform</span>: scaleX(<span class="hl-num">1</span>); }
+}
+
+<span class="hl-com">/* ─── ANCHOR POSITIONING (popups, tooltips) ─── */</span>
+<span class="hl-sel">.anchor</span>  { <span class="hl-prop">anchor-name</span>: --btn; }
+<span class="hl-sel">.tooltip</span> {
+  <span class="hl-prop">position</span>: absolute;
+  <span class="hl-prop">position-anchor</span>: --btn;
+  <span class="hl-prop">top</span>: anchor(bottom);
+  <span class="hl-prop">left</span>: anchor(center);
+}
+
+<span class="hl-com">/* ─── color-mix() ─── */</span>
+<span class="hl-sel">.tinted</span> {
+  <span class="hl-prop">background</span>: color-mix(in oklch, blue <span class="hl-num">30%</span>, white);
+}
+
+<span class="hl-com">/* ─── math functions ─── */</span>
+<span class="hl-sel">.math</span> {
+  <span class="hl-prop">width</span>:  min(<span class="hl-num">100%</span>, <span class="hl-num">600px</span>);
+  <span class="hl-prop">height</span>: max(<span class="hl-num">200px</span>, <span class="hl-num">50vh</span>);
+  <span class="hl-prop">font-size</span>: clamp(<span class="hl-num">1rem</span>, <span class="hl-num">2.5vw</span>, <span class="hl-num">2rem</span>);
+  <span class="hl-prop">width</span>:  round(nearest, <span class="hl-num">333px</span>, <span class="hl-num">50px</span>);  <span class="hl-com">/* 350px */</span>
+}
+
+<span class="hl-com">/* ─── @starting-style (enter animations!) ─── */</span>
+<span class="hl-sel">.popover</span> {
+  <span class="hl-prop">transition</span>: opacity <span class="hl-num">300ms</span>, transform <span class="hl-num">300ms</span>;
+  <span class="hl-kw">@starting-style</span> {
+    <span class="hl-prop">opacity</span>: <span class="hl-num">0</span>;
+    <span class="hl-prop">transform</span>: translateY(-<span class="hl-num">8px</span>);
+  }
+}</pre>
+    </div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 19.1 <span class="difficulty diff-hard">Hard</span></div>
+      <div class="box-meta">Topic: Modern CSS</div>
+      <ol class="box-steps">
+        <li>Refactor a stylesheet from SASS nesting to native CSS nesting — no preprocessor.</li>
+        <li>Build a reading progress bar that fills purely with scroll-driven animations.</li>
+        <li>Use <code>color-mix()</code> to auto-generate lighter/darker variants of a brand color.</li>
+        <li>Implement a dark mode using <code>light-dark()</code> function and <code>color-scheme</code> property.</li>
+      </ol>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ SECTION 20 ═══════════════════════════════ -->
+  <section class="section" id="s20">
+    <div class="section-header">
+      <span class="section-num">20</span>
+      <h2>Accessibility (a11y)</h2>
+      <span class="tag tag-tip">Critical</span>
+    </div>
+
+    <div class="callout callout-good">
+      <div class="callout-label">✅ Accessibility is Not Optional</div>
+      In many countries accessibility is a legal requirement (ADA, WCAG 2.1 AA in EU). Beyond compliance, accessible sites are faster, more SEO-friendly, and better for all users.
+    </div>
+
+    <h3>ARIA — Accessible Rich Internet Applications</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">html — aria patterns</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">&lt;!-- Labels --&gt;</span>
+<span class="hl-tag">&lt;button</span> <span class="hl-attr">aria-label</span>=<span class="hl-val">"Close dialog"</span><span class="hl-tag">&gt;</span>✕<span class="hl-tag">&lt;/button&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">aria-labelledby</span>=<span class="hl-val">"dialog-title"</span><span class="hl-tag">&gt;</span>...<span class="hl-tag">&lt;/div&gt;</span>
+<span class="hl-tag">&lt;input</span> <span class="hl-attr">aria-describedby</span>=<span class="hl-val">"hint-text"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-com">&lt;!-- States --&gt;</span>
+<span class="hl-tag">&lt;button</span> <span class="hl-attr">aria-expanded</span>=<span class="hl-val">"false"</span> <span class="hl-attr">aria-controls</span>=<span class="hl-val">"menu"</span><span class="hl-tag">&gt;</span>Menu<span class="hl-tag">&lt;/button&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">id</span>=<span class="hl-val">"menu"</span> <span class="hl-attr">aria-hidden</span>=<span class="hl-val">"true"</span><span class="hl-tag">&gt;</span>...<span class="hl-tag">&lt;/div&gt;</span>
+<span class="hl-tag">&lt;input</span> <span class="hl-attr">aria-invalid</span>=<span class="hl-val">"true"</span> <span class="hl-attr">aria-errormessage</span>=<span class="hl-val">"email-error"</span><span class="hl-tag">&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">role</span>=<span class="hl-val">"progressbar"</span> <span class="hl-attr">aria-valuenow</span>=<span class="hl-val">"60"</span> <span class="hl-attr">aria-valuemin</span>=<span class="hl-val">"0"</span> <span class="hl-attr">aria-valuemax</span>=<span class="hl-val">"100"</span><span class="hl-tag">&gt;&lt;/div&gt;</span>
+
+<span class="hl-com">&lt;!-- Live regions — announce dynamic changes --&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">aria-live</span>=<span class="hl-val">"polite"</span> <span class="hl-attr">aria-atomic</span>=<span class="hl-val">"true"</span><span class="hl-tag">&gt;</span>
+  Status messages go here
+<span class="hl-tag">&lt;/div&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">role</span>=<span class="hl-val">"alert"</span><span class="hl-tag">&gt;</span>Urgent: Your session is expiring.<span class="hl-tag">&lt;/div&gt;</span>
+
+<span class="hl-com">&lt;!-- Skip navigation link --&gt;</span>
+<span class="hl-tag">&lt;a</span> <span class="hl-attr">href</span>=<span class="hl-val">"#main"</span> <span class="hl-attr">class</span>=<span class="hl-val">"skip-link"</span><span class="hl-tag">&gt;</span>Skip to main content<span class="hl-tag">&lt;/a&gt;</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — accessibility</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* Visually hidden but screen-reader accessible */</span>
+<span class="hl-sel">.sr-only</span> {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+<span class="hl-com">/* Focus styles — NEVER remove, only restyle */</span>
+<span class="hl-sel">:focus-visible</span> {
+  outline: 3px solid #4f9eff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+<span class="hl-com">/* Skip link */</span>
+<span class="hl-sel">.skip-link</span> {
+  position: absolute;
+  transform: translateY(-200%);
+  z-index: 9999;
+}
+<span class="hl-sel">.skip-link:focus</span> {
+  transform: translateY(0);
+}</pre>
+    </div>
+
+    <h3>WCAG 2.1 Checklist</h3>
+    <table class="prop-table">
+      <tr><th>Criterion</th><th>Requirement</th></tr>
+      <tr><td class="prop-name">Color contrast</td><td class="prop-desc">4.5:1 for normal text, 3:1 for large text (AA level)</td></tr>
+      <tr><td class="prop-name">Keyboard nav</td><td class="prop-desc">All interactive elements focusable, logical tab order</td></tr>
+      <tr><td class="prop-name">Focus visible</td><td class="prop-desc">Clear focus indicator on all interactive elements</td></tr>
+      <tr><td class="prop-name">Alt text</td><td class="prop-desc">All meaningful images have descriptive alt attributes</td></tr>
+      <tr><td class="prop-name">Heading hierarchy</td><td class="prop-desc">Logical h1→h6 order, no skipping levels</td></tr>
+      <tr><td class="prop-name">Form labels</td><td class="prop-desc">Every input has associated label</td></tr>
+      <tr><td class="prop-name">Error messages</td><td class="prop-desc">Clear error messages linked to inputs</td></tr>
+      <tr><td class="prop-name">Touch targets</td><td class="prop-desc">Min 44×44px touch target size</td></tr>
+      <tr><td class="prop-name">Resize text</td><td class="prop-desc">No loss of content when text zoomed to 200%</td></tr>
+      <tr><td class="prop-name">Language</td><td class="prop-desc">lang attribute on &lt;html&gt;</td></tr>
+    </table>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 21 ═══════════════════════════════ -->
+  <section class="section" id="s21">
+    <div class="section-header">
+      <span class="section-num">21</span>
+      <h2>Performance</h2>
+      <span class="tag tag-tip">Production</span>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Critical CSS</div>
+        <div class="card-desc">Inline above-the-fold CSS in &lt;style&gt; to eliminate render-blocking. Load the rest with rel="preload".</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🖼</div>
+        <div class="card-title">Image Optimization</div>
+        <div class="card-desc">Use WebP/AVIF formats. Add width/height to prevent CLS. Use loading="lazy" for below-fold images.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎞</div>
+        <div class="card-title">will-change</div>
+        <div class="card-desc">Hint browser to promote element to GPU layer: will-change: transform. Use sparingly — creates memory overhead.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <div class="card-title">Content-visibility</div>
+        <div class="card-desc">content-visibility: auto skips rendering off-screen elements. Massive paint performance gains on long pages.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">Reflows vs Repaints</div>
+        <div class="card-desc">Avoid changing layout properties (width, height, margin) in JS. Use transform and opacity — GPU-only.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📝</div>
+        <div class="card-title">Font Loading</div>
+        <div class="card-desc">Use font-display: swap to prevent FOIT. Preload critical fonts. Subset fonts to languages needed.</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">html + css — performance patterns</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">&lt;!-- Preload critical assets --&gt;</span>
+<span class="hl-tag">&lt;link</span> <span class="hl-attr">rel</span>=<span class="hl-val">"preload"</span> <span class="hl-attr">as</span>=<span class="hl-val">"font"</span> <span class="hl-attr">href</span>=<span class="hl-val">"font.woff2"</span> <span class="hl-attr">crossorigin</span><span class="hl-tag">&gt;</span>
+<span class="hl-tag">&lt;link</span> <span class="hl-attr">rel</span>=<span class="hl-val">"preload"</span> <span class="hl-attr">as</span>=<span class="hl-val">"image"</span> <span class="hl-attr">href</span>=<span class="hl-val">"hero.webp"</span><span class="hl-tag">&gt;</span>
+<span class="hl-tag">&lt;link</span> <span class="hl-attr">rel</span>=<span class="hl-val">"modulepreload"</span> <span class="hl-attr">href</span>=<span class="hl-val">"app.js"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-com">/* Optimize long lists and pages */</span>
+<span class="hl-sel">.post</span> {
+  <span class="hl-prop">content-visibility</span>: auto;
+  <span class="hl-prop">contain-intrinsic-size</span>: <span class="hl-num">0</span> <span class="hl-num">300px</span>;  <span class="hl-com">/* Hint for scroll bar sizing */</span>
+}
+
+<span class="hl-com">/* GPU compositing for animated elements */</span>
+<span class="hl-sel">.animated-el</span> {
+  <span class="hl-prop">will-change</span>: transform;
+  <span class="hl-prop">contain</span>: layout paint;  <span class="hl-com">/* CSS containment */</span>
+}
+
+<span class="hl-com">/* Font performance */</span>
+<span class="hl-kw">@font-face</span> {
+  <span class="hl-prop">font-family</span>: <span class="hl-val">'Brand'</span>;
+  <span class="hl-prop">src</span>: url(<span class="hl-val">brand.woff2</span>) format(<span class="hl-val">'woff2'</span>);
+  <span class="hl-prop">font-display</span>: swap;     <span class="hl-com">/* Show fallback, swap when loaded */</span>
+  <span class="hl-prop">unicode-range</span>: U+<span class="hl-num">0000</span>-<span class="hl-num">00FF</span>;  <span class="hl-com">/* Subset to Latin */</span>
+}</pre>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SECTION 22 ═══════════════════════════════ -->
+  <section class="section" id="s22">
+    <div class="section-header">
+      <span class="section-num">22</span>
+      <h2>CSS Architecture</h2>
+      <span class="tag tag-tip">Scalability</span>
+    </div>
+
+    <h3>Methodologies Comparison</h3>
+    <table class="prop-table">
+      <tr><th>Methodology</th><th>Idea</th><th>Best for</th></tr>
+      <tr><td class="prop-name">BEM</td><td class="prop-desc">Block__Element--Modifier naming. .card__title--large</td><td class="prop-desc">Teams, component libraries</td></tr>
+      <tr><td class="prop-name">SMACSS</td><td class="prop-desc">Categorize: Base, Layout, Module, State, Theme</td><td class="prop-desc">Large apps</td></tr>
+      <tr><td class="prop-name">ITCSS</td><td class="prop-desc">Inverted Triangle: Settings → Tools → Generic → Elements → Objects → Components → Trumps</td><td class="prop-desc">Design systems</td></tr>
+      <tr><td class="prop-name">Utility-first</td><td class="prop-desc">One class = one property. Tailwind CSS approach.</td><td class="prop-desc">Rapid prototyping</td></tr>
+      <tr><td class="prop-name">CSS Modules</td><td class="prop-desc">Scoped class names, colocation with component files</td><td class="prop-desc">React/Vue apps</td></tr>
+    </table>
+
+    <h3>Design Token System</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">css — token system</span><div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div></div>
+      <pre><span class="hl-com">/* 3 tiers: Primitive → Semantic → Component */</span>
+
+<span class="hl-com">/* Tier 1: Raw values */</span>
+<span class="hl-sel">:root</span> {
+  <span class="hl-prop">--blue-500</span>: <span class="hl-val">#3b82f6</span>;
+  <span class="hl-prop">--blue-600</span>: <span class="hl-val">#2563eb</span>;
+  <span class="hl-prop">--space-4</span>:  <span class="hl-num">16px</span>;
+}
+
+<span class="hl-com">/* Tier 2: Semantic meaning */</span>
+<span class="hl-sel">:root</span> {
+  <span class="hl-prop">--color-action</span>:    var(<span class="hl-prop">--blue-500</span>);
+  <span class="hl-prop">--color-action-hv</span>: var(<span class="hl-prop">--blue-600</span>);
+  <span class="hl-prop">--space-component</span>: var(<span class="hl-prop">--space-4</span>);
+}
+
+<span class="hl-com">/* Tier 3: Component-specific */</span>
+<span class="hl-sel">.btn</span> {
+  <span class="hl-prop">--btn-bg</span>:      var(<span class="hl-prop">--color-action</span>);
+  <span class="hl-prop">--btn-bg-hv</span>:   var(<span class="hl-prop">--color-action-hv</span>);
+  <span class="hl-prop">--btn-padding</span>: var(<span class="hl-prop">--space-component</span>);
+
+  <span class="hl-prop">background</span>: var(<span class="hl-prop">--btn-bg</span>);
+  <span class="hl-prop">padding</span>: calc(var(<span class="hl-prop">--btn-padding</span>) / <span class="hl-num">2</span>) var(<span class="hl-prop">--btn-padding</span>);
+}
+
+<span class="hl-com">/* Override just the component token for variants */</span>
+<span class="hl-sel">.btn-danger</span> { <span class="hl-prop">--btn-bg</span>: var(<span class="hl-prop">--red-500</span>); }</pre>
+    </div>
+
+    <div class="exercise-box">
+      <div class="box-title">🖊 Exercise 22.1 <span class="difficulty diff-hard">Hard</span></div>
+      <div class="box-meta">Topic: CSS Architecture</div>
+      <ol class="box-steps">
+        <li>Build a complete design token system for a SaaS app: colors (primitive + semantic), spacing scale, type scale, border-radius, shadow levels.</li>
+        <li>Create a button component with 4 variants (primary, secondary, ghost, danger) and 3 sizes using only CSS custom properties — no modifier classes that duplicate rules.</li>
+        <li>Structure a stylesheet using ITCSS — 7 layers, at least 2 files per layer concept.</li>
+        <li>Implement a theme switcher (light/dark/high-contrast) using CSS layers and custom properties only, no JS class toggling.</li>
+      </ol>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ PROJECTS ═══════════════════════════════ -->
+  <section class="section" id="projects">
+    <div class="section-header">
+      <span class="section-num">⬡</span>
+      <h2>Final Projects</h2>
+      <span class="tag tag-proj">Portfolio Quality</span>
+    </div>
+
+    <p>Build these in order. Each project combines multiple concepts and is production-portfolio worthy. Time estimates assume a solid understanding of the sections above.</p>
+
+    <div class="project-box">
+      <div class="box-title">🏗 Project 1: Personal Portfolio <span class="difficulty diff-easy">Beginner</span></div>
+      <div class="box-meta">Covers: Semantic HTML · Responsive Design · Typography · Animations · Accessibility</div>
+      <ol class="box-steps">
+        <li>Build a full personal portfolio site: hero section, about, skills grid, projects, contact form.</li>
+        <li>Semantic HTML throughout — passes Lighthouse accessibility 90+.</li>
+        <li>Fully responsive from 320px to 2560px using mobile-first media queries.</li>
+        <li>Smooth scroll with <code>scroll-behavior</code>. Sticky header with blur backdrop-filter.</li>
+        <li>Custom <code>::selection</code> color and styled scrollbar.</li>
+        <li>All animations respect <code>prefers-reduced-motion</code>.</li>
+        <li>Dark/light mode toggle using CSS custom properties + localStorage.</li>
+      </ol>
+    </div>
+
+    <div class="project-box">
+      <div class="box-title">🏗 Project 2: Blog / Article Site <span class="difficulty diff-easy">Beginner</span></div>
+      <div class="box-meta">Covers: Typography · Semantic HTML · Forms · Grid · Responsive</div>
+      <ol class="box-steps">
+        <li>Create an article page with a proper typographic hierarchy: drop cap, pull quotes, code blocks, figure captions.</li>
+        <li>Related posts grid: auto-fill + minmax, each card has hover lift animation.</li>
+        <li>Sidebar with sticky positioning that stays visible while scrolling article.</li>
+        <li>Reading progress bar using scroll-driven animations or JS + CSS variables.</li>
+        <li>Newsletter signup form with custom validation styles (<code>:valid</code>/<code>:invalid</code>).</li>
+      </ol>
+    </div>
+
+    <div class="project-box">
+      <div class="box-title">🏗 Project 3: SaaS Landing Page <span class="difficulty diff-medium">Intermediate</span></div>
+      <div class="box-meta">Covers: Grid · Flexbox · Animations · CSS Variables · Positioning · Performance</div>
+      <ol class="box-steps">
+        <li>Hero section: gradient background mesh, animated CTA button, floating badges with keyframes.</li>
+        <li>Features grid: 3-column on desktop, 2 on tablet, 1 on mobile.</li>
+        <li>Pricing cards: CSS Grid + <code>:has()</code> to highlight selected plan.</li>
+        <li>Testimonial slider: CSS-only using <code>scroll-snap</code> and <code>overscroll-behavior</code>.</li>
+        <li>FAQ section with native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> + custom animated arrow.</li>
+        <li>Performance: Critical CSS inline, image lazy loading, font-display swap, LCP &lt;2.5s.</li>
+      </ol>
+    </div>
+
+    <div class="project-box">
+      <div class="box-title">🏗 Project 4: Dashboard UI <span class="difficulty diff-medium">Intermediate</span></div>
+      <div class="box-meta">Covers: CSS Grid · Flexbox · Custom Properties · Advanced Selectors · a11y</div>
+      <ol class="box-steps">
+        <li>Collapsible sidebar + main layout using CSS Grid. Sidebar toggles with a CSS variable <code>--sidebar-width</code>.</li>
+        <li>Stats cards with animated counters (CSS only using <code>@property</code> and <code>counter()</code> trick).</li>
+        <li>Data table with sticky header, zebra rows, sortable column indicator styling.</li>
+        <li>Notification dropdown using <code>:popover</code> API (popover attribute + CSS <code>::backdrop</code>).</li>
+        <li>Full keyboard navigation — every interactive element reachable and clear focus styling.</li>
+        <li>Container queries on cards: compact when sidebar open, expanded when closed.</li>
+      </ol>
+    </div>
+
+    <div class="project-box">
+      <div class="box-title">🏗 Project 5: E-Commerce Product Page <span class="difficulty diff-medium">Intermediate</span></div>
+      <div class="box-meta">Covers: Forms · Images · Grid · Animations · CSS Custom Properties</div>
+      <ol class="box-steps">
+        <li>Product image gallery with thumbnail row and main image — CSS Grid. Zoom on hover with transform + overflow hidden.</li>
+        <li>Color/size selectors: radio inputs completely restyled with CSS — no JS, full accessibility.</li>
+        <li>Quantity stepper: custom styled number input with +/– buttons.</li>
+        <li>Product reviews: star rating system built purely with CSS (reversed flex and :checked).</li>
+        <li>Sticky "Add to Cart" bar that appears on scroll using <code>position: sticky</code> + <code>:has()</code>.</li>
+        <li>Responsive: product image above description on mobile, side-by-side on desktop.</li>
+      </ol>
+    </div>
+
+    <div class="project-box">
+      <div class="box-title">🏗 Project 6: CSS Art / Animation Showcase <span class="difficulty diff-medium">Intermediate</span></div>
+      <div class="box-meta">Covers: Keyframes · Transforms · Pseudo-elements · Clip-path · Filters</div>
+      <ol class="box-steps">
+        <li>Build a loading screen: animated logo using clip-path and SVG stroke-dashoffset.</li>
+        <li>CSS-only card flip animation (3D transform, backface-visibility).</li>
+        <li>Neon glow button using box-shadow layers and CSS animation.</li>
+        <li>Animated gradient text using background-clip: text and keyframe hue-rotate.</li>
+        <li>Pure CSS progress stepper with connecting lines using ::before pseudo-elements.</li>
+        <li>Page transition system using View Transitions API.</li>
+      </ol>
+    </div>
+
+    <div class="project-box">
+      <div class="box-title">🏗 Project 7: UI Component Library <span class="difficulty diff-hard">Advanced</span></div>
+      <div class="box-meta">Covers: CSS Architecture · Design Tokens · Accessibility · All CSS Features</div>
+      <ol class="box-steps">
+        <li>Create a complete component library: buttons (variants + sizes), badges, alerts, cards, modals, dropdowns, tabs, toasts, accordions, tooltips, progress bars, spinners.</li>
+        <li>All components built with 3-tier token system. No hardcoded values.</li>
+        <li>Full light and dark theme. Each component respects <code>prefers-color-scheme</code>.</li>
+        <li>Comprehensive keyboard navigation on all interactive components.</li>
+        <li>All components meet WCAG 2.1 AA — verified with axe DevTools.</li>
+        <li>Build an HTML living style guide that documents every component with code examples.</li>
+      </ol>
+    </div>
+
+    <div class="project-box">
+      <div class="box-title">🏗 Project 8: Full Website Clone + Improve <span class="difficulty diff-hard">Advanced</span></div>
+      <div class="box-meta">Covers: Everything · Production Quality</div>
+      <ol class="box-steps">
+        <li>Choose a real-world website (Stripe, Linear, Vercel, Notion) and rebuild its homepage from scratch.</li>
+        <li>Modern HTML: semantic structure, Open Graph, schema.org JSON-LD markup.</li>
+        <li>Improve on the original: better accessibility score, reduced motion support, container queries.</li>
+        <li>Target Core Web Vitals: LCP &lt;2.5s, CLS &lt;0.1, FID &lt;100ms. Verify with Lighthouse.</li>
+        <li>Write a 500-word post-mortem: what CSS decisions you made and why.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="guide-footer">
+    <h3>You've covered the full stack of HTML &amp; CSS.</h3>
+    <p>Master the concepts, complete the exercises, and ship the projects.<br>
+    The best frontend developers understand <em>why</em> the browser works the way it does — not just <em>which</em> property to use.</p>
+    <p style="margin-top:12px; font-family: var(--mono); font-size:0.75rem; color: var(--text-faint);">
+      Built for rebooted_engineer · HTML &amp; CSS Fullstack Reference 2025
+    </p>
+  </div>
+
+</main>
+</div>
+
+<script>
+  // Active nav link highlighting
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('.section');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
